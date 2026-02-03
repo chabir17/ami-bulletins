@@ -151,10 +151,14 @@
       const moyRaw = moyIdx > -1 ? student[moyIdx] : null;
       const mentionRaw = mentionIdx > -1 ? student[mentionIdx] : null;
 
-      const rangDisplay =
-        rangRaw && rangRaw !== "-" ? (rangRaw == "1" ? "1er" : `${rangRaw}ème`) : "-";
+      const isValidRank = rangRaw && rangRaw !== "-" && !rangRaw.toString().includes("#DIV/0!");
+      const rangDisplay = isValidRank
+        ? rangRaw == "1"
+          ? `1<sup>er</sup>`
+          : `${rangRaw}<sup>ème</sup>`
+        : "-";
 
-      clone.querySelector(".js-rang-display").textContent = rangDisplay;
+      clone.querySelector(".js-rang-display").innerHTML = rangDisplay;
 
       let avg20 = "-";
       let mention = mentionRaw || ""; // Only use CSV mention, no automatic calculation
@@ -173,7 +177,13 @@
       const calculatedAvg = hasNotes && totalMax > 0 ? (studentSum / totalMax) * 20 : null;
 
       // 2. Decide which Average to use (Priority: CSV column > Calculated)
-      if (moyRaw !== null && moyRaw !== "" && moyRaw !== "-") {
+      const isValidMoy =
+        moyRaw !== null &&
+        moyRaw !== "" &&
+        moyRaw !== "-" &&
+        !moyRaw.toString().includes("#DIV/0!");
+
+      if (isValidMoy) {
         avg20 = moyRaw.toString().replace(".", ",");
       } else if (calculatedAvg !== null) {
         avg20 = formatNum(calculatedAvg);
@@ -219,7 +229,7 @@
 
         rowClone.querySelector(".js-row-matiere-ar-trans").textContent =
           `${info.ar} ${info.trans ? `- ${info.trans}` : ""}`;
-        rowClone.querySelector(".js-row-matiere-fr").textContent = `(${info.fr || "Non Défini"})`;
+        rowClone.querySelector(".js-row-matiere-fr").textContent = `${info.fr || "Non Défini"}`;
         rowClone.querySelector(".js-row-note").innerHTML = scoreDisplay;
         rowClone.querySelector(".js-row-avg").textContent = formatNum(subjectStat.avg);
         rowClone.querySelector(".js-row-min").textContent = formatNum(subjectStat.min);

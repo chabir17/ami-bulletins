@@ -31,7 +31,7 @@ const CONFIG = {
     SIRAH: { ar: "سيرة", trans: "SĪRAH", fr: "BIOGRAPHIE" },
     ARABIC: { ar: "لغة عربية", trans: "", fr: "LANGUE ARABE" },
     TAJWID: { ar: "تجويد", trans: "TAJWĪD", fr: "INTONATIONS" },
-    AQIDAH: { ar: "عقيدة", trans: "AQIDAH", fr: "CROYANCES" },
+    "AQA'ID": { ar: "عقائد", trans: "AQA'ID", fr: "CROYANCES" },
     HADITH: { ar: "حديث", trans: "HADĪTH", fr: "HADITH" },
     HIFZ: { ar: "حفظ", trans: "HIFZ", fr: "MÉMORISATION" },
     AKHLAQ: { ar: "أخلاق", trans: "AKHLĀQ", fr: "COMPORTEMENT" },
