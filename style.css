@@ -19,7 +19,7 @@
     /* Colors */
     --brand: #c8b070;
     --brand-dark: color-mix(in srgb, var(--brand), black 45%);
-    --brand-light: color-mix(in srgb, var(--brand), white 85%);
+    --brand-light: color-mix(in srgb, var(--brand), white 90%);
 
     --color-primary: var(--brand-dark);
     --color-primary-light: var(--brand-light);
@@ -178,7 +178,7 @@ th,
     background: var(--color-white);
     width: var(--page-width);
     height: var(--page-height);
-    padding: var(--spacing-3xl) var(--spacing-4xl);
+    padding: var(--spacing-2xl) var(--spacing-3xl);
     margin: 180px auto var(--spacing-2xl) auto; /* Top margin adjusted for dashboard */
     position: relative;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
