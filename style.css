@@ -19,7 +19,7 @@
     /* Colors */
     --brand: #c8b070;
     --brand-dark: color-mix(in srgb, var(--brand), black 45%);
-    --brand-light: color-mix(in srgb, var(--brand), white 80%);
+    --brand-light: color-mix(in srgb, var(--brand), white 85%);
 
     --color-primary: var(--brand-dark);
     --color-primary-light: var(--brand-light);
@@ -337,7 +337,7 @@ th,
 .bottom-section {
     display: flex;
     justify-content: space-between;
-    margin: var(--spacing-xl) 0 var(--spacing-lg) 0;
+    margin: auto 0 var(--spacing-lg) 0;
     gap: var(--spacing-3xl);
 }
 
