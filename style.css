@@ -1,6 +1,6 @@
 /**
  * AMI Report Card Styling
- * Refactored Design Tokens with Descriptive Names
+ * Optimized & Standardized Architecture
  */
 
 :root {
@@ -17,14 +17,18 @@
     --font-size-xs: 10px; /* Sub / Legal */
 
     /* Colors */
-    --color-black: #000;
+    --brand: #c8b070;
+    --brand-dark: color-mix(in srgb, var(--brand), black 45%);
+    --brand-light: color-mix(in srgb, var(--brand), white 80%);
+
+    --color-primary: var(--brand-dark);
+    --color-primary-light: var(--brand-light);
+    --color-text: #111827;
     --color-white: #fff;
-    --color-grey: #444;
-    --color-grey-light: #666;
-    --color-bg-preview: #555;
-    --color-bg-stats: #f9f9f9;
-    --color-bg-shading: #f8f9fa;
-    --color-accent-error: #d32f2f;
+    --color-grey: #4b5563;
+    --color-bg-preview: #374151;
+    --color-bg-shading: var(--brand-light);
+    --color-error: #dc2626;
 
     /* Spacing */
     --spacing-xs: 0.125rem;
@@ -37,8 +41,8 @@
     --spacing-4xl: 3.75rem;
 
     /* Borders & Radius */
-    --border-thin: 0.5px solid var(--color-black);
-    --border-thick: 1px solid var(--color-black);
+    --border-thin: 1px solid var(--brand);
+    --border-thick: 2px solid var(--brand);
     --border-radius-base: 0.5rem;
 
     /* Layout */
@@ -47,7 +51,7 @@
     --table-row-height: 1.25cm;
 }
 
-/* Global Reset */
+/* --- Global Reset --- */
 * {
     box-sizing: border-box;
 }
@@ -56,12 +60,27 @@ body {
     font-family: var(--font-fr);
     margin: 0;
     background-color: var(--color-bg-preview);
-    color: var(--color-black);
+    color: var(--color-text);
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
 }
 
-/* UI Controls */
+/* Brand Bold Utility */
+b,
+strong,
+th,
+.info-value,
+.header-title,
+.bulletin-title,
+.matiere-combined,
+.footer-row td,
+.appr-title,
+.visa-box {
+    color: var(--brand-dark);
+    font-weight: 600;
+}
+
+/* --- UI Controls --- */
 .controls {
     background: var(--color-white);
     padding: var(--spacing-xl);
@@ -78,10 +97,9 @@ body {
 .hidden {
     display: none;
 }
-
 .error-msg {
     margin: 0 0 var(--spacing-lg) 0;
-    color: var(--color-accent-error);
+    color: var(--color-error);
     font-weight: 600;
 }
 
@@ -95,15 +113,15 @@ body {
     }
 }
 
-/* A4 Page Layout */
+/* --- A4 Page Layout --- */
 .page {
     background: var(--color-white);
     width: var(--page-width);
     height: var(--page-height);
     padding: var(--spacing-3xl) var(--spacing-4xl);
-    margin: var(--spacing-4xl) auto var(--spacing-2xl) auto;
+    margin: var(--spacing-4xl) auto;
     position: relative;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -122,50 +140,49 @@ body {
 /* --- Header Component --- */
 .header {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: var(--spacing-md);
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    gap: var(--spacing-2xl);
 }
 
 .header-center {
-    text-align: center;
+    text-align: left;
     flex-grow: 1;
-    margin: 0 var(--spacing-3xl);
 }
 
 .header-title {
-    font-weight: 600;
+    font-weight: 800;
     font-size: var(--font-size-lg);
     text-transform: uppercase;
-    margin-top: var(--spacing-xs);
-    margin-bottom: var(--spacing-xs);
+    margin: var(--spacing-xs) 0;
+    letter-spacing: 0.025em;
 }
 
 .header-address {
     font-size: var(--font-size-sm);
-    line-height: 1.3;
+    line-height: 1.4;
+    color: var(--color-grey);
     margin: 0 auto;
 }
 
 .logo-box {
-    width: 25mm;
-    height: 15mm;
+    width: 2cm;
+    height: 2cm;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-
 .header-logo {
     max-height: 100%;
     max-width: 100%;
 }
-
 .separator-line {
     border-bottom: var(--border-thin);
-    margin: var(--spacing-md) 0 var(--spacing-md) 0;
+    margin: var(--spacing-md) 0;
 }
 
-/* --- Global Info Rows --- */
+/* --- Info Section --- */
 .info-row {
     display: flex;
     justify-content: space-between;
@@ -173,87 +190,83 @@ body {
     margin-bottom: var(--spacing-md);
     font-size: var(--font-size-md);
 }
-
 .info-row:last-child {
     margin-bottom: 0;
 }
-
 .info-label {
+    color: var(--color-grey);
     margin-right: 0.3125rem;
 }
-
-.info-value {
-    font-weight: 600;
-}
-
 .info-left,
 .info-right {
-    text-align: left;
     width: 50%;
 }
 
 .bulletin-title {
     text-align: center;
     font-size: var(--font-size-xl);
-    font-weight: 600;
     text-transform: uppercase;
-    margin: var(--spacing-xl) 0 var(--spacing-xl) 0;
+    margin: var(--spacing-xl) 0;
 }
 
 /* --- Grade Table Component --- */
 .grade-table {
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
+    border-collapse: collapse;
     font-size: var(--font-size-base);
-    border: var(--border-thick);
+    border: var(--border-thin);
     border-radius: var(--border-radius-base);
     overflow: hidden;
 }
 
+/* Internal Grid - Separate Mode Logic */
 .grade-table th,
 .grade-table td {
-    border: var(--border-thin);
     padding: var(--spacing-md);
+    border-right: var(--border-thin);
+    border-bottom: var(--border-thin);
+    vertical-align: middle;
 }
 
-/* Reset borders for separate collapse logic */
-.grade-table th,
-.grade-table td {
-    border-top: none;
-    border-left: none;
+/* Specific right-edge cells removal (avoids double borders with table frame) */
+.col-appreciations,
+.grade-table td:nth-child(6),
+.cell-footer-merged {
+    border-right: none;
 }
 
-.grade-table th:not(:first-child),
-.grade-table td:not(:first-child) {
-    border-left: var(--border-thin);
+/* Specific bottom-edge cells removal */
+.footer-row:last-child td,
+.cell-stats-box,
+.cell-footer-merged {
+    border-bottom: none;
 }
 
-.grade-table tr:not(:first-child) th,
-.grade-table tr:not(:first-child) td {
-    border-top: var(--border-thin);
-}
-
+/* Header Styling */
 .grade-table th {
-    text-align: center;
-    font-weight: 600;
-    background-color: var(--color-bg-shading);
+    background-color: var(--color-primary-light);
     text-transform: uppercase;
     font-size: var(--font-size-sm);
+    font-weight: 600;
 }
 
-/* Thick border below header */
+/* Thick Separators */
 .grade-table thead tr:last-child th,
 .grade-table thead th[rowspan="2"] {
     border-bottom: var(--border-thick);
 }
 
-/* Table Column Widths */
+.footer-row:first-child td {
+    border-top: var(--border-thick);
+}
+
+/* Specific Columns */
 .col-matieres {
     width: 20%;
 }
 .col-eleve {
     width: 15%;
+    background-color: var(--color-bg-shading);
 }
 .col-classe-moy,
 .col-classe-min,
@@ -264,44 +277,25 @@ body {
     width: 41%;
 }
 
-/* Side Borders for "ÉLÈVE" Column */
-.col-eleve,
 .js-sem-header,
 .grade-table td:nth-child(2) {
-    border-left: var(--border-thick) !important;
-    border-right: var(--border-thick) !important;
     background-color: var(--color-bg-shading);
 }
 
-/* Left Border for "APPRÉCIATIONS GÉNÉRALES" Column */
-.col-appreciations,
-.grade-table td:nth-child(6) {
-    border-left: var(--border-thick) !important;
-}
-
-.grade-table tbody tr {
-    height: var(--table-row-height);
-}
-
-/* Row separation for Discipline */
+/* Row Discipline */
 .row-discipline td {
-    border-top: var(--border-thick) !important;
+    border-top: var(--border-thin);
 }
 
-/* Cell Specific Styling */
+/* Cell Content */
 .cell-matiere {
     text-align: left;
-    padding: 0.3125rem var(--spacing-md);
-    vertical-align: middle;
 }
-
 .matiere-combined {
     font-family: var(--font-ar), var(--font-fr);
-    font-weight: 600;
     font-size: var(--font-size-base);
     margin-bottom: var(--spacing-xs);
 }
-
 .matiere-sub {
     font-weight: 600;
     font-size: var(--font-size-xs);
@@ -309,34 +303,20 @@ body {
     color: var(--color-grey);
 }
 
-.cell-note {
-    text-align: center;
-    font-weight: 500;
-    font-size: var(--font-size-base);
-    vertical-align: middle;
-}
-
-.bareme-small {
-    color: var(--color-grey-light);
-}
-
+.cell-note,
 .cell-stat {
     text-align: center;
     font-size: var(--font-size-base);
-    vertical-align: middle;
+}
+.bareme-small {
+    color: var(--color-primary);
 }
 
 /* --- Footer Table Styling --- */
 .footer-row td {
-    font-weight: 600;
-    border-top: var(--border-thick);
     background-color: var(--color-bg-shading);
     padding: var(--spacing-md) var(--spacing-sm);
-}
-
-/* Reduce border between Average and Rank */
-.footer-row + .footer-row td {
-    border-top: var(--border-thin);
+    font-weight: 600;
 }
 
 .total-cell,
@@ -345,34 +325,19 @@ body {
     padding-left: var(--spacing-lg);
     text-transform: uppercase;
 }
-
 .cell-avg-val {
-    border-top: var(--border-thick);
+    border-top: var(--border-thin);
 }
 .cell-stats-box {
-    background: var(--color-bg-stats);
     font-size: var(--font-size-base);
     text-align: center;
 }
 
-.cell-footer-bottom {
-    border-top: none;
-    border-bottom: var(--border-thick);
-}
-
-.cell-footer-merged {
-    border-left: var(--border-thick) !important;
-    border-bottom: var(--border-thick);
-    padding-left: var(--spacing-lg);
-    font-weight: normal;
-}
-
-/* --- Bottom Section Component --- */
+/* --- Bottom Section --- */
 .bottom-section {
-    margin-top: auto;
     display: flex;
     justify-content: space-between;
-    margin-bottom: var(--spacing-3xl);
+    margin: var(--spacing-xl) 0 var(--spacing-lg) 0;
     gap: var(--spacing-3xl);
 }
 
@@ -394,7 +359,7 @@ body {
 .appr-checkbox-row {
     display: flex;
     align-items: center;
-    margin-bottom: var(--spacing-md);
+    margin: var(--spacing-sm) 0;
 }
 
 .checkbox {
@@ -407,7 +372,7 @@ body {
 
 .visa-box {
     width: 40%;
-    text-align: right;
+    text-align: center;
     padding-top: var(--spacing-2xl);
     font-size: var(--font-size-base);
     font-weight: 600;
@@ -421,11 +386,7 @@ body {
     font-size: var(--font-size-xs);
 }
 
-/* Utility */
-.sup-no-caps {
-    text-transform: none;
-}
-
+/* --- Utilities --- */
 sup {
     font-size: 0.6em;
     text-transform: none;
