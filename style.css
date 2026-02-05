@@ -603,6 +603,9 @@ th,
     padding: var(--spacing-md) var(--spacing-sm);
     font-weight: 600;
 }
+.cell-footer-merged {
+    font-weight: 400 !important;
+}
 .total-cell,
 .rang-cell {
     text-align: left;
@@ -650,6 +653,11 @@ th,
     border: var(--border-thin);
     border-radius: var(--spacing-xs);
     margin-right: var(--spacing-lg);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: var(--brand-dark);
 }
 
 .visa-box {

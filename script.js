@@ -103,10 +103,12 @@
             });
             const rangIdx = headers.findIndex((h) => h?.toUpperCase() === "RANG");
             const mentionIdx = headers.findIndex((h) => h?.toUpperCase() === "MENTION");
+            const apprIdx = headers.findIndex((h) => h?.toUpperCase().includes("APPRÉCIATION") || h?.toUpperCase().includes("APPRECIATION"));
 
             const moyRaw = moyIdx > -1 ? student[moyIdx] : null;
             const rangRaw = rangIdx > -1 ? student[rangIdx] : "-";
             const mentionRaw = mentionIdx > -1 ? student[mentionIdx] : "";
+            const apprRaw = apprIdx > -1 ? student[apprIdx] : "";
 
             // Rank String with sup
             const isValidRank = rangRaw && rangRaw !== "-" && !rangRaw.toString().includes("#DIV/0!");
@@ -133,6 +135,7 @@
                 avg: finalAvg,
                 rank: rangStr,
                 mention: mentionRaw,
+                appreciation: apprRaw,
             };
         },
     };
@@ -171,7 +174,24 @@
                 // Footer Metrics
                 pageClone.querySelector(".js-rang-display").innerHTML = metrics.rank;
                 pageClone.querySelector(".js-avg-20").textContent = `${metrics.avg} / 20`;
-                pageClone.querySelector(".js-mention-display").innerHTML = metrics.mention ? `Mention: <b>${metrics.mention}</b>` : "";
+                // Map APPRÉCIATIONS GÉNÉRALES to the last cell
+                pageClone.querySelector(".js-mention-display").textContent = metrics.appreciation || "";
+
+                // Map MENTION to Checkboxes
+                if (metrics.mention) {
+                    const m = metrics.mention.toUpperCase();
+                    const checkboxes = pageClone.querySelectorAll(".appr-checkbox-row .checkbox");
+
+                    if (m.includes("FÉLICITATIONS") || m.includes("FELICITATIONS")) {
+                        checkboxes[0].textContent = "✓";
+                    } else if (m.includes("ENCOURAGEMENTS")) {
+                        checkboxes[1].textContent = "✓";
+                    } else if (m.includes("TRAVAIL")) {
+                        checkboxes[2].textContent = "✓";
+                    } else if (m.includes("COMPORTEMENT")) {
+                        checkboxes[3].textContent = "✓";
+                    }
+                }
 
                 // Rows
                 const tbody = pageClone.querySelector(".js-table-body");
