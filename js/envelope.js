@@ -3,23 +3,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const CONTAINER_EL = document.getElementById("container");
     const CSV_PATH = "data/2025-2026/Database/ÉLÈVES.csv";
 
-    function getURLParams() {
-        const params = new URLSearchParams(window.location.search);
-        return {
-            classFilter: params.get("class"),
-        };
-    }
-
     async function init() {
         console.log("Initializing Envelope Generator...");
-        const { classFilter } = getURLParams();
+        const params = App.getURLParams();
+        const classFilter = params.class || null;
 
         // Ensure header is loaded
-        if (typeof getAMIHeader === "function" && !getAMIHeader()) {
-            // If preloadHeader is exposed globally via common.js (it is)
-            if (typeof preloadHeader === "function") {
-                await preloadHeader();
-            }
+        if (typeof App.getHeader === "function" && !App.getHeader()) {
+            await App.preloadHeader();
         }
 
         if (typeof Papa === "undefined") {
@@ -91,8 +82,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Inject Header using common.js
             const headerContainer = clone.getElementById("header-container");
-            if (headerContainer && typeof getAMIHeader === "function") {
-                headerContainer.innerHTML = getAMIHeader();
+            if (headerContainer && typeof App.getHeader === "function") {
+                headerContainer.innerHTML = App.getHeader();
             }
 
             // Fill details

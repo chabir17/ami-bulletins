@@ -7,25 +7,17 @@
     // --- UTILS ---
     const Utils = {
         formatNum(num, dec = 2) {
-            // Updated to handle 20 and 0 correctly without unneeded decimals via parseFloat
-            if (num === undefined || num === null || (typeof num === "number" && isNaN(num))) return "-";
-            const val = parseFloat(num);
-            if (isNaN(val)) return "-";
-            return parseFloat(val.toFixed(dec)).toString().replace(".", ",");
+            return App.formatNum(num, dec);
         },
 
         getURLParams() {
-            const params = new URLSearchParams(window.location.search);
-            const year = params.get("year");
-            const sem = params.get("sem");
-            const className = params.get("class");
-
-            if (!year && !sem && !className) return null;
+            const p = App.getURLParams();
+            if (!p.year && !p.sem && !p.class) return null;
 
             return {
-                year: year || "2025-2026",
-                sem: sem || "1",
-                className: className || "M06",
+                year: p.year || "2025-2026",
+                sem: p.sem || "1",
+                className: p.class || "M06",
             };
         },
 
@@ -165,8 +157,8 @@
 
                 // Inject Header using common.js
                 const headerContainer = pageClone.getElementById("header-container");
-                if (headerContainer && typeof getAMIHeader === "function") {
-                    headerContainer.innerHTML = getAMIHeader();
+                if (headerContainer && typeof App.getHeader === "function") {
+                    headerContainer.innerHTML = App.getHeader();
                 }
 
                 const metrics = GradeEngine.calculateStudentMetrics(student, headers, stats);
@@ -276,8 +268,8 @@
             // UIController.populateClassPicker();
 
             // Ensure header is loaded
-            if (!getAMIHeader()) {
-                await preloadHeader();
+            if (!App.getHeader()) {
+                await App.preloadHeader();
             }
 
             const dropzone = document.getElementById("dropzone");

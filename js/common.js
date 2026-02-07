@@ -1,28 +1,41 @@
 /**
- * Common Header Generator
- * Centralizes the HTML structure for the AMI Header across Bulletins and Envelopes.
+ * Common Utilities & Shared Logic
+ * Namespace: App
  */
 
-let headerCache = "";
+const App = {
+    headerCache: "",
 
-async function preloadHeader() {
-    try {
-        const response = await fetch("header.html");
-        headerCache = await response.text();
-    } catch (e) {
-        console.error("Could not load header.html", e);
-        headerCache = "<!-- Error loading header -->";
-    }
-}
+    async preloadHeader() {
+        try {
+            const response = await fetch("header.html");
+            this.headerCache = await response.text();
+        } catch (e) {
+            console.error("Could not load header.html", e);
+            this.headerCache = "<!-- Error loading header -->";
+        }
+    },
 
-function getAMIHeader() {
-    return headerCache;
-}
+    getHeader() {
+        return this.headerCache;
+    },
 
-// Initial fetch when script loads
-preloadHeader();
+    getURLParams() {
+        const params = new URLSearchParams(window.location.search);
+        const entries = {};
+        for (const [key, value] of params.entries()) {
+            entries[key] = value;
+        }
+        return entries;
+    },
 
-// If running in node (for tests), export. Otherwise, global function.
-if (typeof module !== "undefined" && module.exports) {
-    module.exports = { getAMIHeader };
-}
+    formatNum(num, dec = 2) {
+        if (num === undefined || num === null || (typeof num === "number" && isNaN(num))) return "-";
+        const val = parseFloat(num);
+        if (isNaN(val)) return "-";
+        return parseFloat(val.toFixed(dec)).toString().replace(".", ",");
+    },
+};
+
+// Initial fetch
+App.preloadHeader();
