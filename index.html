@@ -87,12 +87,38 @@
                         </div>
                     </div>
                 </section>
+
+                <!-- Detailed Class Table -->
+                <section class="details-section" style="margin-top: 2rem">
+                    <div class="manual-dashboard" style="margin-top: 0">
+                        <div class="dashboard-header">
+                            <h2 class="dashboard-title">Détails par Classe</h2>
+                        </div>
+                        <div class="table-container" style="overflow-x: auto">
+                            <table class="ami-table" id="class-details-table">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: left">Classe</th>
+                                        <th style="text-align: left">Professeur</th>
+                                        <th>Élèves</th>
+                                        <th>Adhérents (O/N)</th>
+                                        <th>Filles / Garçons</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Rows injected by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
             </main>
         </div>
         <!-- Mobile nav handled by sidebar.html injection via container -->
 
         <!-- Application Script -->
         <script src="js/common.js"></script>
+        <script src="js/config.js"></script>
         <script src="js/dashboard.js"></script>
     </body>
 </html>

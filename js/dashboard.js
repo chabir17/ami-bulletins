@@ -66,6 +66,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             processData(rawData);
             renderKPIs();
             renderCharts();
+            renderClassTable();
             console.log("Dashboard initialized successfully.");
         } catch (error) {
             console.error("Dashboard init error:", error);
@@ -107,33 +108,31 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         State.data.forEach((student) => {
             const cl = (student["Classe"] || "Inconnu").trim();
-            if (!classStats[cl]) classStats[cl] = { M: 0, F: 0 };
+            if (!classStats[cl]) classStats[cl] = { M: 0, F: 0, Adh: 0, NonAdh: 0, Total: 0 };
+
+            classStats[cl].Total++;
 
             // Count Gender
             const genre = (student["Genre"] || "").toUpperCase();
-            let isBoy = false;
 
             if (["M", "H", "GARÇON"].includes(genre)) {
                 boyCount++;
                 classStats[cl].M++;
-                isBoy = true;
             } else if (["F", "FILLE"].includes(genre)) {
                 girlCount++;
                 classStats[cl].F++;
             } else {
-                // Unknown gender, maybe default to something or ignore?
-                // Let's assume F for unknown or just don't count in breakdown if strict
-                // But usually we want total to match sum.
-                // For now, let's treat non-M as F or just ignore from gender stats but keep in total?
-                // The prompt asks for G/F breakdown.
+                // Unknown gender -> ignored for specific M/F count but counted in Total
             }
 
             // Count Adherents
             const adherentVal = (student["Adhérent AMI ?"] || "").toUpperCase();
             if (["TRUE", "VRAI", "OUI", "YES"].includes(adherentVal)) {
                 adherentCount++;
+                classStats[cl].Adh++;
             } else {
                 nonAdherentCount++;
+                classStats[cl].NonAdh++;
             }
         });
 
@@ -179,6 +178,38 @@ document.addEventListener("DOMContentLoaded", async () => {
             <span class="warning">${kpis.nonAdherents} ❌</span>
         `,
         );
+    }
+
+    function renderClassTable() {
+        const tbody = document.querySelector("#class-details-table tbody");
+        if (!tbody) return;
+        tbody.innerHTML = "";
+
+        const stats = State.kpis.classStats;
+        const sortedClasses = Object.keys(stats).sort();
+
+        sortedClasses.forEach((cls) => {
+            const data = stats[cls];
+            // Get Teacher from CONFIG or default
+            let teacher = "-";
+            if (typeof CONFIG !== "undefined" && CONFIG.classes && CONFIG.classes[cls]) {
+                teacher = CONFIG.classes[cls].teacher;
+            }
+
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td style="text-align:left; font-weight:bold; color: var(--brand-dark);">${cls}</td>
+                <td style="text-align:left;">${teacher}</td>
+                <td style="font-weight:bold;">${data.Total}</td>
+                <td>
+                    <span class="success">${data.Adh}</span> / <span class="warning">${data.NonAdh}</span>
+                </td>
+                <td>
+                    <span style="color:${COLORS.blue}">${data.M}</span> / <span style="color:${COLORS.pink}">${data.F}</span>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
     }
 
     function renderCharts() {
