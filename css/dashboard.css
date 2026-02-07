@@ -33,28 +33,30 @@
     align-items: start;
 }
 
-/* Common Card Style */
+/* Common Card Style (Refined) */
 .hero-card,
 .stats-list-card,
 .mini-chart-card,
 .main-chart-card,
 .table-card {
     background: var(--bg-surface);
-    border-radius: var(--radius-lg);
-    padding: 1.5rem;
-    box-shadow: var(--shadow-soft);
-    border: 1px solid rgba(0, 0, 0, 0.03);
+    border-radius: 24px; /* Consistent rounded corners */
+    padding: 1.75rem; /* More breathing room */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); /* Softer, more diffuse shadow */
+    border: 1px solid rgba(0, 0, 0, 0.04);
     transition:
-        transform 0.2s,
-        box-shadow 0.2s;
+        transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.3s ease;
     overflow: hidden;
 }
 
 .hero-card:hover,
 .stats-list-card:hover,
-.mini-chart-card:hover {
-    box-shadow: var(--shadow-hover);
-    transform: translateY(-2px);
+.mini-chart-card:hover,
+.main-chart-card:hover,
+.table-card:hover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    transform: translateY(-4px);
 }
 
 /* 1. HERO CARD */
@@ -132,26 +134,19 @@ body.dark-mode .hero-big-stats {
 }
 
 .section-title {
-    font-size: 1rem;
-    color: var(--text-secondary);
-    font-weight: 700;
-    margin: 0 0 0 0;
+    font-size: 1.1rem; /* Slightly larger */
+    color: var(--text-primary); /* Darker/Higher contrast */
+    font-weight: 800; /* Extra bold */
+    margin: 0 0 0.5rem 0; /* Add bottom margin since gap is handled dynamically, but safe to add */
     font-family: var(--font-heading);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    /* Removed gap/before */
 }
 
-.section-title::before {
-    content: "";
-    display: block;
-    width: 4px;
-    height: 16px;
-    background: var(--brand);
-    border-radius: 2px;
-}
+/* Removed .section-title::before */
 
 /* 2. STATS LIST CARD (AMI Gold/Luxury Theme) */
 .two-col-stats {
@@ -195,17 +190,17 @@ body.dark-mode .stats-list-card .sl-icon {
 
 /* Restore specific colors for icons irrespective of bg */
 .stats-list-card .blue-bg {
-    color: #2563eb;
-} /* Stronger Blue */
+    color: var(--col-blue);
+}
 .stats-list-card .pink-bg {
-    color: #db2777;
-} /* Stronger Pink */
+    color: var(--col-pink);
+}
 .stats-list-card .green-bg {
-    color: #16a34a;
-} /* Stronger Green */
+    color: var(--col-green);
+}
 .stats-list-card .orange-bg {
-    color: #ea580c;
-} /* Stronger Orange */
+    color: var(--col-orange);
+}
 
 .sl-item {
     display: flex;
@@ -228,7 +223,7 @@ body.dark-mode .stats-list-card .sl-icon {
 
 .orange-bg {
     background: rgba(249, 115, 22, 0.1);
-    color: #fb923c;
+    color: var(--col-orange);
 }
 
 /* Ensure cards fill height */
@@ -272,7 +267,10 @@ body.dark-mode .stats-list-card .sl-icon {
 }
 
 /* RESPONSIVE */
-/* RESPONSIVE */
+.responsive-hidden {
+    display: none;
+} /* Utility helper if needed later */
+
 @media (max-width: 1100px) {
     /* Tablet Landscape */
     .dashboard-top-row,
@@ -341,10 +339,13 @@ body.dark-mode .stats-list-card .sl-icon {
     border-bottom-right-radius: 12px;
 }
 
-/* Dark mode specific for table */
+/* Dark mode specific for table rows */
 body.dark-mode .modern-table tbody tr {
-    background: rgba(255, 255, 255, 0.06); /* Slightly Lighter for better contrast on black bg */
+    background: rgba(255, 255, 255, 0.03); /* Even more subtle */
     border: 1px solid rgba(255, 255, 255, 0.05);
+}
+body.dark-mode .modern-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.08);
 }
 
 /* --- Class Badge Styles --- */
@@ -360,33 +361,28 @@ body.dark-mode .modern-table tbody tr {
 }
 
 .badge-green {
-    background-color: rgba(34, 197, 94, 0.15);
-    color: #4ade80;
+    background-color: rgba(74, 222, 128, 0.15);
+    color: var(--col-green);
 }
-
 .badge-blue {
     background-color: rgba(59, 130, 246, 0.15);
-    color: #60a5fa;
+    color: var(--col-blue);
 }
-
 .badge-yellow {
-    background-color: rgba(234, 179, 8, 0.15);
-    color: #facc15;
+    background-color: rgba(250, 204, 21, 0.15);
+    color: var(--col-yellow);
 }
-
 .badge-orange {
-    background-color: rgba(249, 115, 22, 0.15);
-    color: #fb923c;
+    background-color: rgba(251, 146, 60, 0.15);
+    color: var(--col-orange);
 }
-
 .badge-teal {
-    background-color: rgba(20, 184, 166, 0.15);
-    color: #2dd4bf;
+    background-color: rgba(45, 212, 191, 0.15);
+    color: var(--col-teal);
 }
-
 .badge-purple {
-    background-color: rgba(168, 85, 247, 0.15);
-    color: #c084fc;
+    background-color: rgba(192, 132, 252, 0.15);
+    color: var(--col-purple);
 }
 
 /* --- KPI Stats Row (Multi-value) --- */

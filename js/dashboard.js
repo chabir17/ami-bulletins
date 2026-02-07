@@ -12,20 +12,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     let COLORS = getThemeColors();
 
     function getThemeColors() {
-        const isDark =
-            document.body.classList.contains("dark-mode") || (!document.body.classList.contains("light-mode") && window.matchMedia("(prefers-color-scheme: dark)").matches);
-
+        const style = getComputedStyle(document.body);
         return {
-            brand: "#c8b070",
-            brandDark: "#6e613d",
-            brandLight: isDark ? "#374151" : "#f4f1e6",
-            text: isDark ? "#f9fafb" : "#4b5563",
-            grid: isDark ? "#374151" : "#f3f4f6",
-            blue: "#3b5bdb", // Indigo-like modern blue
-            pink: "#d6336c", // Deep modern pink
-            // New Adherent Colors (Green/Orange from KPI)
-            green: "#4ade80",
-            orange: "#fb923c",
+            brand: style.getPropertyValue("--brand").trim(),
+            brandDark: style.getPropertyValue("--brand-dark").trim(),
+            brandLight: style.getPropertyValue("--brand-light").trim(),
+            text: style.getPropertyValue("--text-primary").trim(),
+            grid: style.getPropertyValue("--border-color").trim(),
+            // Colors from CSS Variables
+            blue: style.getPropertyValue("--col-blue").trim(),
+            pink: style.getPropertyValue("--col-pink").trim(),
+            green: style.getPropertyValue("--col-green").trim(),
+            orange: style.getPropertyValue("--col-orange").trim(),
         };
     }
 

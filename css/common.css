@@ -53,7 +53,14 @@
     --color-bg-preview: var(--bg-app);
     --spacing-xl: 1rem;
     --spacing-lg: 0.75rem;
-    --spacing-md: 0.5rem;
+    /* Chart & Badge Colors */
+    --col-blue: #3b5bdb;
+    --col-pink: #d6336c;
+    --col-green: #4ade80;
+    --col-orange: #fb923c;
+    --col-yellow: #facc15;
+    --col-teal: #2dd4bf;
+    --col-purple: #c084fc;
 }
 
 /* Dark Theme overrides */
@@ -197,9 +204,12 @@ body {
     height: 100vh;
     border-radius: 0; /* Square */
 
-    background: #0f1014; /* Deep, almost black matte */
-    background: linear-gradient(180deg, #13131a 0%, #0a0a0c 100%);
-    border-right: 1px solid rgba(255, 255, 255, 0.03); /* Extremely subtle border */
+    /* Update Sidebar background to use generated pattern */
+    background-color: #0f1014;
+    background-image: linear-gradient(180deg, rgba(19, 19, 26, 0.95) 0%, rgba(10, 10, 12, 0.98) 100%), url("../assets/arabic_pattern_dark.webp");
+    background-size: cover, 400px; /* Gradient covers, pattern repeats */
+    background-blend-mode: overlay;
+    border-right: 1px solid rgba(255, 255, 255, 0.03);
     color: var(--sidebar-text);
 
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4); /* Shadow to right */
@@ -223,24 +233,25 @@ body {
 }
 
 .logo-circle {
-    width: 4.5rem; /* Bigger ~72px */
-    height: 4.5rem;
-    border-radius: 24px;
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 8rem;
+    height: 8rem;
+    border-radius: 0; /* No boundary */
+    background: transparent; /* Remove background */
+    backdrop-filter: none;
+    border: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 1.5rem;
-    padding: 10px;
+    margin-bottom: 2rem;
+    padding: 0;
 }
 
-/* Ensure logo is visible on dark bg */
 .logo-circle img {
-    /* filter: brightness(0) invert(1); */
-    width: 80%;
-    height: auto;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    /* Optional: Add a subtle drop shadow to make it pop if needed */
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
 }
 
 .brand-title {
@@ -282,11 +293,16 @@ body {
 }
 
 .nav-links li.active a {
-    background-color: var(--brand);
-    background: linear-gradient(90deg, var(--brand) 0%, #e0c888 100%); /* Gold gradient */
-    color: #000; /* Contrast text */
+    background: rgba(200, 176, 112, 0.15); /* Subtle Gold Glass */
+    border: 1px solid rgba(200, 176, 112, 0.25); /* Crisp border */
+    color: #ffffff; /* White text for clarity */
     font-weight: 700;
-    box-shadow: 0 8px 20px -4px rgba(200, 176, 112, 0.4);
+    box-shadow: 0 0 20px rgba(200, 176, 112, 0.1); /* Very soft ambient glow */
+}
+
+.nav-links li.active a .icon {
+    color: var(--brand);
+    filter: drop-shadow(0 0 8px rgba(200, 176, 112, 0.4)); /* Icon Glow */
 }
 
 .nav-links .icon {
@@ -313,32 +329,25 @@ body {
     max-width: 1600px;
 }
 
-/* --- Sidebar Toggle Button (Integrated) --- */
+/* --- Sidebar Toggle Button (Integrated in Footer) --- */
 .sidebar-toggle-btn {
-    /* Position inside the header instead of hanging out */
-    position: absolute;
-    top: 1.5rem;
-    right: 1.5rem;
+    /* Flow naturally in footer */
+    position: relative;
+    top: auto;
+    right: auto;
     width: 32px;
     height: 32px;
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 8px; /* Soft square */
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     color: var(--sidebar-text);
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     transition: all 0.2s ease;
-    z-index: 100;
-    box-shadow: none;
-}
-
-.sidebar-toggle-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    color: #fff;
-    transform: none; /* simple hover */
+    margin: 0.5rem auto; /* Center horizontally */
 }
 
 /* --- Collapsed State Adjustments --- */
@@ -348,42 +357,20 @@ body {
 }
 
 .sidebar.collapsed .brand-title,
-.sidebar.collapsed .sidebar-footer p {
-    display: none;
+.sidebar.collapsed .sidebar-footer p,
+.sidebar.collapsed .link-text {
+    display: none !important;
+}
+
+/* Rotate chevron when collapsed */
+.sidebar.collapsed .sidebar-toggle-btn .toggle-icon {
+    display: inline-block;
+    transform: rotate(180deg);
 }
 
 .sidebar.collapsed .nav-links a {
     justify-content: center;
     padding: 1rem;
-}
-
-.sidebar.collapsed .nav-links a span:not(.icon) {
-    display: none; /* Hide text */
-}
-
-.sidebar.collapsed .nav-links .icon {
-    margin-right: 0;
-    font-size: 1.4rem;
-}
-
-/* Re-add omitted collapsed structure styles (needed because previous replace was large) */
-.sidebar.collapsed {
-    width: var(--sidebar-width-collapsed);
-    padding: 2rem 1rem;
-}
-
-.sidebar.collapsed .brand-title,
-.sidebar.collapsed .sidebar-footer p {
-    display: none;
-}
-
-.sidebar.collapsed .nav-links a {
-    justify-content: center;
-    padding: 1rem;
-}
-
-.sidebar.collapsed .nav-links a span:not(.icon) {
-    display: none;
 }
 
 .sidebar.collapsed .nav-links .icon {
@@ -392,14 +379,8 @@ body {
 }
 
 .sidebar.collapsed .logo-circle {
-    width: 48px;
-    height: 48px;
-    margin-bottom: 2rem;
-}
-
-.sidebar.collapsed .logo-circle {
-    width: 48px;
-    height: 48px;
+    width: 3.5rem; /* ~56px */
+    height: 3.5rem;
     margin-bottom: 2rem;
 }
 
