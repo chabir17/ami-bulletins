@@ -21,8 +21,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             brandLight: isDark ? "#374151" : "#f4f1e6",
             text: isDark ? "#f9fafb" : "#4b5563",
             grid: isDark ? "#374151" : "#f3f4f6",
-            blue: "#3b82f6",
-            pink: "#ec4899",
+            blue: "#3b5bdb", // Indigo-like modern blue
+            pink: "#d6336c", // Deep modern pink
+            // New Adherent Colors (Green/Orange from KPI)
+            green: "#4ade80",
+            orange: "#fb923c",
         };
     }
 
@@ -46,15 +49,26 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     function updateChartsTheme() {
+        // Redo Chart Defaults
+        Chart.defaults.color = COLORS.text;
+
         if (State.charts.classes) {
             State.charts.classes.options.scales.x.ticks.color = COLORS.text;
             State.charts.classes.options.scales.y.ticks.color = COLORS.text;
             State.charts.classes.options.scales.y.grid.color = COLORS.grid;
+
+            // Update Legend labels color
+            if (State.charts.classes.options.plugins && State.charts.classes.options.plugins.legend) {
+                State.charts.classes.options.plugins.legend.labels.color = COLORS.text;
+            }
             State.charts.classes.update();
         }
-        // Doughnut doesn't use scales, but if legend color needs update:
+
         if (State.charts.gender) {
-            // State.charts.gender.options.plugins.legend.labels.color = COLORS.text; // if needed
+            // Update Legend labels color
+            if (State.charts.gender.options.plugins && State.charts.gender.options.plugins.legend) {
+                State.charts.gender.options.plugins.legend.labels.color = COLORS.text;
+            }
             State.charts.gender.update();
         }
     }
@@ -149,35 +163,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // === RENDERING ===
+    // === RENDERING ===
     function renderKPIs() {
         const kpis = State.kpis;
-
-        // Helper
-        const setVal = (id, html) => {
+        // Helper: safe set innerHTML
+        const setVal = (id, val) => {
             const el = document.getElementById(id);
-            if (el) el.innerHTML = html;
+            if (el) el.innerHTML = val;
         };
 
-        setVal("kpi-total", `${kpis.total}`);
-        setVal("kpi-classes", `${kpis.classes}`);
+        // 1. Hero Card Stats
+        setVal("kpi-total", kpis.total);
+        setVal("kpi-classes", kpis.classes);
 
-        // Ratio: "X Garçons | Y Filles"
-        setVal(
-            "kpi-ratio",
-            `
-            <span style="color:${COLORS.blue}">${kpis.boys} 👦</span> / 
-            <span style="color:${COLORS.pink}">${kpis.girls} 👧</span>
-        `,
-        );
-
-        // Adherents: "X Adh | Y Non"
-        setVal(
-            "kpi-adherents",
-            `
-            <span class="success">${kpis.adherents} ✅</span> / 
-            <span class="warning">${kpis.nonAdherents} ❌</span>
-        `,
-        );
+        // 2. Quick Stats List
+        setVal("val-boys", kpis.boys);
+        setVal("val-girls", kpis.girls);
+        setVal("val-adh", `<span style="color:${COLORS.green}">${kpis.adherents}</span> <small style="color:${COLORS.text}; opacity:0.6;">/ ${kpis.total}</small>`);
     }
 
     function renderClassTable() {
@@ -196,16 +198,30 @@ document.addEventListener("DOMContentLoaded", async () => {
                 teacher = CONFIG.classes[cls].teacher;
             }
 
+            // Determine badge color based on class name patterns
+            let badgeClass = "badge-purple"; // Default fallback
+            if (cls.match(/^M0[1-3]/)) badgeClass = "badge-green";
+            else if (cls.match(/^M0[4-5]/)) badgeClass = "badge-teal";
+            else if (cls.match(/^M0[6-8]/)) badgeClass = "badge-blue";
+            else if (cls.match(/^M10/)) badgeClass = "badge-yellow";
+            else if (cls.startsWith("F")) badgeClass = "badge-orange";
+
             const tr = document.createElement("tr");
             tr.innerHTML = `
-                <td style="text-align:left; font-weight:bold; color: var(--brand-dark);">${cls}</td>
+                <td style="text-align:left;">
+                    <span class="class-badge ${badgeClass}">${cls}</span>
+                </td>
                 <td style="text-align:left;">${teacher}</td>
                 <td style="font-weight:bold;">${data.Total}</td>
                 <td>
-                    <span class="success">${data.Adh}</span> / <span class="warning">${data.NonAdh}</span>
+                    <span style="color:${COLORS.green}; font-weight:700;">${data.Adh}</span> 
+                    <span style="color:${COLORS.brand}; margin: 0 4px;">&bull;</span> 
+                    <span style="color:${COLORS.orange}; font-weight:700;">${data.NonAdh}</span>
                 </td>
                 <td>
-                    <span style="color:${COLORS.blue}">${data.M}</span> / <span style="color:${COLORS.pink}">${data.F}</span>
+                    <span style="color:${COLORS.blue}; font-weight:700;">${data.M}</span> 
+                    <span style="color:${COLORS.brand}; margin: 0 4px;">&bull;</span> 
+                    <span style="color:${COLORS.pink}; font-weight:700;">${data.F}</span>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -219,10 +235,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         const boysData = labels.map((cl) => stats[cl].M);
         const girlsData = labels.map((cl) => stats[cl].F);
 
+        // Common Chart Defaults
+        Chart.defaults.font.family = "'Noto Sans', sans-serif";
+        Chart.defaults.color = COLORS.text;
+
         // --- 1. Classes Stacked Bar Chart ---
         const ctxClasses = document.getElementById("classesChart").getContext("2d");
 
-        // Destroy existing if any (logic usually needed but simplified here as we init once)
         if (State.charts.classes && typeof State.charts.classes.destroy === "function") {
             State.charts.classes.destroy();
         }
@@ -236,14 +255,18 @@ document.addEventListener("DOMContentLoaded", async () => {
                         label: "Garçons",
                         data: boysData,
                         backgroundColor: COLORS.blue,
-                        borderRadius: 2,
+                        borderRadius: 6, // Rounded bars
+                        barPercentage: 0.6, // Slimmer bars
+                        categoryPercentage: 0.8,
                         stack: "gender",
                     },
                     {
                         label: "Filles",
                         data: girlsData,
                         backgroundColor: COLORS.pink,
-                        borderRadius: 2,
+                        borderRadius: 6, // Rounded bars
+                        barPercentage: 0.6,
+                        categoryPercentage: 0.8,
                         stack: "gender",
                     },
                 ],
@@ -254,24 +277,47 @@ document.addEventListener("DOMContentLoaded", async () => {
                 plugins: {
                     legend: {
                         position: "top",
-                        labels: { color: COLORS.text }, // Ensure legend text adapts
+                        align: "end", // Align legend cleanly
+                        labels: {
+                            color: COLORS.text, // Explicit color init
+                            usePointStyle: true,
+                            boxWidth: 8,
+                            padding: 20,
+                            font: { size: 12, weight: 600 },
+                        },
                     },
                     tooltip: {
-                        mode: "index",
-                        intersect: false,
+                        backgroundColor: "rgba(20, 20, 30, 0.9)",
+                        padding: 12,
+                        cornerRadius: 8,
+                        titleFont: { size: 13, weight: 700 },
+                        bodyFont: { size: 12 },
+                        displayColors: true,
+                        usePointStyle: true,
                     },
                 },
                 scales: {
                     y: {
                         stacked: true,
                         beginAtZero: true,
-                        grid: { color: COLORS.grid },
-                        ticks: { color: COLORS.text },
+                        border: { display: false }, // No axis line
+                        grid: {
+                            color: COLORS.grid,
+                            borderDash: [5, 5], // Dotted grid lines
+                            drawTicks: false,
+                        },
+                        ticks: {
+                            padding: 10,
+                            font: { size: 11 },
+                        },
                     },
                     x: {
                         stacked: true,
+                        border: { display: false },
                         grid: { display: false },
-                        ticks: { color: COLORS.text },
+                        ticks: {
+                            font: { size: 11, weight: 600 },
+                        },
                     },
                 },
             },
@@ -293,22 +339,39 @@ document.addEventListener("DOMContentLoaded", async () => {
                         data: [State.kpis.boys, State.kpis.girls],
                         backgroundColor: [COLORS.blue, COLORS.pink],
                         borderWidth: 0,
-                        hoverOffset: 4,
+                        hoverOffset: 10,
+                        borderRadius: 20, // Modern rounded segments
+                        spacing: 5, // Gap between segments
                     },
                 ],
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                cutout: "60%",
+                cutout: "75%", // Thinner ring
                 plugins: {
                     legend: {
                         position: "bottom",
-                        labels: { usePointStyle: true, padding: 20, color: COLORS.text },
+                        labels: {
+                            color: COLORS.text, // Explicit color init
+                            usePointStyle: true,
+                            pointStyle: "circle",
+                            padding: 24,
+                            font: { size: 12, weight: 600 },
+                        },
+                    },
+                    tooltip: {
+                        backgroundColor: "rgba(20, 20, 30, 0.9)",
+                        padding: 12,
+                        cornerRadius: 8,
+                        usePointStyle: true,
                     },
                 },
             },
         });
+
+        // Trigger table render after charts
+        renderClassTable();
     }
 
     // Run

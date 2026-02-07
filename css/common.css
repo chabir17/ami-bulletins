@@ -3,7 +3,7 @@
  * (Shared Fonts, Colors, Resets, Headers, Tables, Sidebar, Layout)
  */
 
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;800&family=Amiri:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Noto+Sans:wght@400;600;700;800&family=Amiri:wght@400;700&display=swap");
 
 /* --- Root Variables & Theming --- */
 :root {
@@ -17,7 +17,7 @@
     --font-ar: "Amiri", serif;
 
     /* Light Theme Defaults */
-    --bg-app: #f3f4f6;
+    --bg-app: #f4f1e6; /* Brand-light background */
     --bg-surface: #ffffff;
     --text-primary: #111827;
     --text-secondary: #4b5563;
@@ -27,8 +27,16 @@
 
     /* UI Measurements */
     --sidebar-width: 260px;
-    --sidebar-width-collapsed: 70px;
-    --header-height: 60px;
+    --sidebar-width-collapsed: 80px;
+    --header-height: 70px;
+
+    /* Modern UI Vars (Manoracheta Inspired) */
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.03); /* Extremely subtle */
+    --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.06);
+    --font-heading: "Poppins", sans-serif; /* Rounder, friendlier */
 
     /* Legacy Vars (Backward Compat) */
     --color-text: var(--text-primary);
@@ -55,7 +63,7 @@ body.dark-mode {
 
 /* Light Mode Override Class */
 body.light-mode {
-    --bg-app: #f3f4f6;
+    --bg-app: #f4f1e6; /* Brand-light background */
     --bg-surface: #ffffff;
     --text-primary: #111827;
     --text-secondary: #4b5563;
@@ -177,7 +185,8 @@ body {
 .sidebar {
     width: var(--sidebar-width);
     background-color: var(--bg-surface);
-    border-right: 1px solid var(--border-color);
+    border-right: none; /* Removed border for cleaner floating look */
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.02); /* Soft separator */
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -186,54 +195,46 @@ body {
     transition: width 0.3s ease;
     top: 0;
     left: 0;
+    padding: 1rem; /* Add padding around nav */
 }
 
 .sidebar-header {
-    padding: 2rem 1.5rem;
+    padding: 1rem 0 2rem 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: none; /* Cleanup */
 }
 
 .logo-circle {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    border: 2px solid var(--brand);
-    padding: 4px;
-    margin-bottom: 1rem;
+    width: 50px;
+    height: 50px;
+    border-radius: 16px; /* Squircle */
+    border: none;
+    padding: 0;
+    margin-bottom: 0.75rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #fff;
-}
-@media (prefers-color-scheme: dark) {
-    .logo-circle {
-        background: rgba(255, 255, 255, 0.9);
-    }
-}
-
-.sidebar-logo {
-    max-width: 100%;
-    max-height: 100%;
+    background: transparent;
+    overflow: hidden;
 }
 
 .brand-title {
-    font-family: var(--font-ar), serif;
-    color: var(--brand);
-    font-size: 1.1rem;
+    font-family: var(--font-heading);
+    color: var(--brand-dark);
+    font-size: 1rem;
     margin: 0;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    text-transform: capitalize; /* Less aggressive */
+    letter-spacing: 0.5px;
     text-align: center;
     font-weight: 700;
 }
 
 .nav-links {
     list-style: none;
-    padding: 1.5rem 1rem;
-    margin: 0;
+    padding: 0;
+    margin: 1rem 0;
     flex-grow: 1;
 }
 
@@ -244,23 +245,32 @@ body {
 .nav-links a {
     display: flex;
     align-items: center;
-    padding: 0.75rem 1rem;
+    padding: 0.85rem 1.25rem;
     color: var(--text-secondary);
     text-decoration: none;
-    border-radius: 8px;
-    font-weight: 600;
+    border-radius: 14px; /* Soft Pill shape */
+    font-weight: 500;
     transition: all 0.2s ease;
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
 }
 
 .nav-links a:hover {
     background-color: var(--bg-app);
-    color: var(--brand);
+    color: var(--brand-dark);
+    transform: translateX(2px);
 }
 
 .nav-links li.active a {
-    background-color: var(--brand-light);
-    color: var(--brand);
-    border: 1px solid var(--brand);
+    background-color: var(--brand);
+    color: #fff; /* Solid brand color for active, inspiration style */
+    border: none;
+    box-shadow: 0 8px 20px -6px rgba(200, 176, 112, 0.6); /* Soft colored shadow */
+}
+
+/* Force icons white on active */
+.nav-links li.active a .icon {
+    /* filter: brightness(200%); */
 }
 
 .nav-links .icon {
@@ -615,9 +625,8 @@ body {
 }
 
 /* Specific Checkbox Style inside Picker (for multi-select) */
-.picker-item input[type="checkbox"] + label:before {
-    /* Optional: Add checkmark icon or box if desired, but color change is enough */
-}
+/* Specific Checkbox Style inside Picker (for multi-select) */
+/* .picker-item input[type="checkbox"] + label:before { } */
 
 /* Upload Section */
 .upload-section {
@@ -699,35 +708,72 @@ body {
 
 /* --- PRINT STYLES --- */
 @media print {
+    /* Hide Navigation and UI chrome */
     .sidebar,
     .mobile-nav,
     .no-print,
-    .top-bar {
+    .top-bar,
+    .controls,
+    .theme-switch-wrapper,
+    .dashboard-header,
+    .manual-dashboard {
         display: none !important;
     }
 
-    .app-container {
-        display: block;
+    /* Reset Body to Pure White */
+    body,
+    body.dark-mode,
+    body.light-mode {
+        background-color: white !important;
+        color: black !important;
+
+        /* Force CSS Variables Override for Dark Mode */
+        --bg-app: #ffffff !important;
+        --bg-surface: #ffffff !important;
+        --text-primary: #000000 !important;
+        --text-secondary: #000000 !important;
+        --text-tertiary: #555555 !important;
+        --border-color: #000000 !important;
+        --brand-light: #ffffff !important;
+        --brand-dark: #000000 !important;
     }
 
-    .main-content {
-        margin: 0 !important;
-        padding: 0 !important;
-        width: 100% !important;
+    /* Reset specific containers that might hold dark backgrounds */
+    .app-container,
+    .main-content,
+    .ami-table,
+    .kpi-card,
+    .chart-container,
+    tr,
+    th,
+    td {
+        background-color: white !important;
+        background: white !important;
+        color: black !important;
+        box-shadow: none !important;
     }
 
-    body {
-        background-color: white;
-        color: black;
-    }
-
-    /* Ensure tables print correctly */
-    .ami-table {
-        border: 1px solid #000;
-    }
+    /* Ensure table headers are readable */
     .ami-table th {
-        background-color: #eee !important;
-        color: #000 !important;
-        -webkit-print-color-adjust: exact;
+        background-color: #f0f0f0 !important; /* Light grey for header distinction */
+        color: black !important;
+        border-bottom: 2px solid black !important;
+    }
+
+    .ami-table td {
+        border-bottom: 1px solid #ccc !important;
+    }
+
+    /* Hide decorative dark mode elements */
+    .theme-switch-wrapper,
+    .sidebar,
+    .mobile-nav {
+        display: none !important;
+    }
+
+    /* Bulletin/Envelope Headers */
+    .header-title,
+    .header-address {
+        color: black !important;
     }
 }

@@ -27,91 +27,104 @@
             <main class="main-content">
                 <header class="top-bar">
                     <h1 class="page-title">Vue d'ensemble</h1>
-                    <div class="user-profile">
-                        <span class="admin-badge">Admin</span>
+                    <!-- NEW DASHBOARD LAYOUT (Inspired by Manoracheta) -->
+                    <div class="dashboard-layout">
+                        <!-- Top Row: HERO + STATS LIST + DOUGHNUT -->
+                        <div class="dashboard-top-row">
+                            <!-- 1. HERO CARD (Welcome + Totals) -->
+                            <div class="hero-card">
+                                <div class="hero-text">
+                                    <h1>Bonjour, Équipe AMI 👋</h1>
+                                    <p>Voici le résumé de l'année scolaire en cours.</p>
+                                    <div class="hero-big-stats">
+                                        <div class="hbs-item">
+                                            <span class="hbs-val" id="kpi-total">-</span>
+                                            <span class="hbs-lbl">Élèves</span>
+                                        </div>
+                                        <div class="hbs-sep"></div>
+                                        <div class="hbs-item">
+                                            <span class="hbs-val" id="kpi-classes">-</span>
+                                            <span class="hbs-lbl">Classes</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="hero-decoration">
+                                    <span class="deco-emoji">🎓</span>
+                                </div>
+                            </div>
+
+                            <!-- 2. QUICK STATS LIST -->
+                            <div class="stats-list-card">
+                                <h3>Vues Rapides</h3>
+                                <div class="sl-item">
+                                    <div class="sl-icon blue-bg">👦</div>
+                                    <div class="sl-meta">
+                                        <span class="sl-lbl">Garçons</span>
+                                        <span class="sl-val" id="val-boys">-</span>
+                                    </div>
+                                </div>
+                                <div class="sl-item">
+                                    <div class="sl-icon pink-bg">👧</div>
+                                    <div class="sl-meta">
+                                        <span class="sl-lbl">Filles</span>
+                                        <span class="sl-val" id="val-girls">-</span>
+                                    </div>
+                                </div>
+                                <div class="sl-item">
+                                    <div class="sl-icon green-bg">✅</div>
+                                    <div class="sl-meta">
+                                        <span class="sl-lbl">Adhérents</span>
+                                        <span class="sl-val" id="val-adh">-</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 3. GENDER DOUGHNUT -->
+                            <div class="mini-chart-card">
+                                <h3>Parité</h3>
+                                <div class="chart-wrapper-mini">
+                                    <canvas id="genderChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Row: MAIN CHART + TABLE -->
+                        <div class="dashboard-bottom-row">
+                            <!-- Classes Bar Chart -->
+                            <div class="main-chart-card">
+                                <div class="card-header">
+                                    <h2>Répartition par Classe</h2>
+                                </div>
+                                <div class="chart-wrapper-main">
+                                    <canvas id="classesChart"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- Class Table -->
+                            <div class="table-card">
+                                <div class="card-header">
+                                    <h2>Détails</h2>
+                                </div>
+                                <div class="table-responsive">
+                                    <table id="class-details-table" class="ami-table modern-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Classe</th>
+                                                <th>Prof.</th>
+                                                <th>Eff.</th>
+                                                <th>Adh.</th>
+                                                <th>G / F</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- JS Injected -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </header>
-
-                <!-- KPI Cards Grid -->
-                <section class="kpi-grid">
-                    <div class="kpi-card">
-                        <div class="kpi-icon total-students">🎓</div>
-                        <div class="kpi-info">
-                            <h3>Total Élèves</h3>
-                            <p class="kpi-value" id="kpi-total">-</p>
-                        </div>
-                    </div>
-
-                    <div class="kpi-card">
-                        <div class="kpi-icon classes-count">🏫</div>
-                        <div class="kpi-info">
-                            <h3>Classes</h3>
-                            <p class="kpi-value" id="kpi-classes">-</p>
-                        </div>
-                    </div>
-
-                    <div class="kpi-card">
-                        <div class="kpi-icon gender-ratio">⚖️</div>
-                        <div class="kpi-info">
-                            <h3>Filles / Garçons</h3>
-                            <p class="kpi-value warning" id="kpi-ratio">-</p>
-                        </div>
-                    </div>
-
-                    <div class="kpi-card">
-                        <div class="kpi-icon adherents">🤝</div>
-                        <div class="kpi-info">
-                            <h3>Adhérents</h3>
-                            <p class="kpi-value success" id="kpi-adherents">-</p>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Charts Section -->
-                <section class="charts-grid">
-                    <div class="chart-container wide">
-                        <div class="chart-header">
-                            <h2>Répartition par Classe</h2>
-                        </div>
-                        <div class="canvas-wrapper">
-                            <canvas id="classesChart"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="chart-container narrow">
-                        <div class="chart-header">
-                            <h2>Répartition Genre</h2>
-                        </div>
-                        <div class="canvas-wrapper doughnut-wrapper">
-                            <canvas id="genderChart"></canvas>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Detailed Class Table -->
-                <section class="details-section" style="margin-top: 2rem">
-                    <div class="manual-dashboard" style="margin-top: 0">
-                        <div class="dashboard-header">
-                            <h2 class="dashboard-title">Détails par Classe</h2>
-                        </div>
-                        <div class="table-container" style="overflow-x: auto">
-                            <table class="ami-table" id="class-details-table">
-                                <thead>
-                                    <tr>
-                                        <th style="text-align: left">Classe</th>
-                                        <th style="text-align: left">Professeur</th>
-                                        <th>Élèves</th>
-                                        <th>Adhérents (O/N)</th>
-                                        <th>Filles / Garçons</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Rows injected by JS -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </section>
             </main>
         </div>
         <!-- Mobile nav handled by sidebar.html injection via container -->
