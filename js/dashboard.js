@@ -93,102 +93,127 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // === DATA PROCESSING ===
     function processData(data) {
-        // Updated filter to match "NUM_ELEVE" exactly as per CSV
-        State.data = data.filter((student) => student["NUM_ELEVE"] && student["Nom"]);
+        // Updated filter
+        State.data = data.filter((student) => student["Nom"]); // Minimal validation
 
         let boyCount = 0;
         let girlCount = 0;
         let adherentCount = 0;
-        const classesSet = new Set();
+        let nonAdherentCount = 0;
+
+        // Track per-class gender stats
+        // { "M06": { M: 10, F: 5 }, ... }
+        const classStats = {};
 
         State.data.forEach((student) => {
+            const cl = (student["Classe"] || "Inconnu").trim();
+            if (!classStats[cl]) classStats[cl] = { M: 0, F: 0 };
+
             // Count Gender
             const genre = (student["Genre"] || "").toUpperCase();
-            if (genre === "M" || genre === "H" || genre === "GARÇON") {
+            let isBoy = false;
+
+            if (["M", "H", "GARÇON"].includes(genre)) {
                 boyCount++;
-            } else if (genre === "F" || genre === "FILLE") {
+                classStats[cl].M++;
+                isBoy = true;
+            } else if (["F", "FILLE"].includes(genre)) {
                 girlCount++;
+                classStats[cl].F++;
+            } else {
+                // Unknown gender, maybe default to something or ignore?
+                // Let's assume F for unknown or just don't count in breakdown if strict
+                // But usually we want total to match sum.
+                // For now, let's treat non-M as F or just ignore from gender stats but keep in total?
+                // The prompt asks for G/F breakdown.
             }
 
             // Count Adherents
             const adherentVal = (student["Adhérent AMI ?"] || "").toUpperCase();
             if (["TRUE", "VRAI", "OUI", "YES"].includes(adherentVal)) {
                 adherentCount++;
+            } else {
+                nonAdherentCount++;
             }
-
-            // Collect Classes
-            const cl = student["Classe"];
-            if (cl) classesSet.add(cl.trim());
         });
 
+        // Computed totals
         State.kpis = {
             total: State.data.length,
-            classes: classesSet.size,
+            classes: Object.keys(classStats).length,
             boys: boyCount,
             girls: girlCount,
             adherents: adherentCount,
-            classList: Array.from(classesSet).sort(),
+            nonAdherents: nonAdherentCount,
+            classStats: classStats,
         };
     }
 
     // === RENDERING ===
     function renderKPIs() {
-        // Simple animation helper
-        const animateValue = (id, start, end, duration) => {
-            const obj = document.getElementById(id);
-            if (!obj) return;
-            let startTimestamp = null;
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                obj.textContent = Math.floor(progress * (end - start) + start);
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                } else {
-                    // KPI Specific formatting after animation
-                    if (id === "kpi-ratio") {
-                        const pctBoys = Math.round((State.kpis.boys / State.kpis.total) * 100) || 0;
-                        const pctGirls = Math.round((State.kpis.girls / State.kpis.total) * 100) || 0;
-                        obj.innerHTML = `<span style="color:${COLORS.blue}">${pctBoys}%</span> / <span style="color:${COLORS.pink}">${pctGirls}%</span>`;
-                    }
-                }
-            };
-            window.requestAnimationFrame(step);
+        const kpis = State.kpis;
+
+        // Helper
+        const setVal = (id, html) => {
+            const el = document.getElementById(id);
+            if (el) el.innerHTML = html;
         };
 
-        animateValue("kpi-total", 0, State.kpis.total, 1000);
-        animateValue("kpi-classes", 0, State.kpis.classes, 1000);
-        animateValue("kpi-adherents", 0, State.kpis.adherents, 1000);
+        setVal("kpi-total", `${kpis.total}`);
+        setVal("kpi-classes", `${kpis.classes}`);
 
-        // Ratio is handled specially in the animation callback properly, but let's init it
-        document.getElementById("kpi-ratio").textContent = "...";
-        // Trigger generic animation which will be overwritten by innerHTML injection at end
-        animateValue("kpi-ratio", 0, 100, 1000);
+        // Ratio: "X Garçons | Y Filles"
+        setVal(
+            "kpi-ratio",
+            `
+            <span style="color:${COLORS.blue}">${kpis.boys} 👦</span> / 
+            <span style="color:${COLORS.pink}">${kpis.girls} 👧</span>
+        `,
+        );
+
+        // Adherents: "X Adh | Y Non"
+        setVal(
+            "kpi-adherents",
+            `
+            <span class="success">${kpis.adherents} ✅</span> / 
+            <span class="warning">${kpis.nonAdherents} ❌</span>
+        `,
+        );
     }
 
     function renderCharts() {
-        // --- 1. Classes Bar Chart ---
-        const classCounts = {};
-        State.data.forEach((s) => {
-            const cl = (s["Classe"] || "Inconnu").trim();
-            classCounts[cl] = (classCounts[cl] || 0) + 1;
-        });
+        const stats = State.kpis.classStats;
+        const labels = Object.keys(stats).sort();
 
-        // Sort by class name logic could be complex (M01, M10), let's use alphanumeric sort
-        const sortedClasses = Object.keys(classCounts).sort();
-        const sortedCounts = sortedClasses.map((cl) => classCounts[cl]);
+        const boysData = labels.map((cl) => stats[cl].M);
+        const girlsData = labels.map((cl) => stats[cl].F);
 
+        // --- 1. Classes Stacked Bar Chart ---
         const ctxClasses = document.getElementById("classesChart").getContext("2d");
+
+        // Destroy existing if any (logic usually needed but simplified here as we init once)
+        if (State.charts.classes && typeof State.charts.classes.destroy === "function") {
+            State.charts.classes.destroy();
+        }
+
         State.charts.classes = new Chart(ctxClasses, {
             type: "bar",
             data: {
-                labels: sortedClasses,
+                labels: labels,
                 datasets: [
                     {
-                        label: "Élèves",
-                        data: sortedCounts,
-                        backgroundColor: COLORS.brand,
-                        borderRadius: 4,
+                        label: "Garçons",
+                        data: boysData,
+                        backgroundColor: COLORS.blue,
+                        borderRadius: 2,
+                        stack: "gender",
+                    },
+                    {
+                        label: "Filles",
+                        data: girlsData,
+                        backgroundColor: COLORS.pink,
+                        borderRadius: 2,
+                        stack: "gender",
                     },
                 ],
             },
@@ -196,15 +221,24 @@ document.addEventListener("DOMContentLoaded", async () => {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { display: false },
+                    legend: {
+                        position: "top",
+                        labels: { color: COLORS.text }, // Ensure legend text adapts
+                    },
+                    tooltip: {
+                        mode: "index",
+                        intersect: false,
+                    },
                 },
                 scales: {
                     y: {
+                        stacked: true,
                         beginAtZero: true,
                         grid: { color: COLORS.grid },
                         ticks: { color: COLORS.text },
                     },
                     x: {
+                        stacked: true,
                         grid: { display: false },
                         ticks: { color: COLORS.text },
                     },
@@ -214,6 +248,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // --- 2. Gender Doughnut Chart ---
         const ctxGender = document.getElementById("genderChart").getContext("2d");
+
+        if (State.charts.gender && typeof State.charts.gender.destroy === "function") {
+            State.charts.gender.destroy();
+        }
+
         State.charts.gender = new Chart(ctxGender, {
             type: "doughnut",
             data: {
@@ -230,11 +269,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                cutout: "70%",
+                cutout: "60%",
                 plugins: {
                     legend: {
                         position: "bottom",
-                        labels: { usePointStyle: true, padding: 20 },
+                        labels: { usePointStyle: true, padding: 20, color: COLORS.text },
                     },
                 },
             },
