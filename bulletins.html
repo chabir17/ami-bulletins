@@ -14,9 +14,10 @@
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600&family=Amiri:wght@400;700&display=swap" rel="stylesheet" />
 
         <!-- Application Files -->
-        <link rel="stylesheet" href="style.css" />
-        <script src="config.js" defer></script>
-        <script src="script.js" defer></script>
+        <link rel="stylesheet" href="css/bulletin.css" />
+        <script src="js/common.js"></script>
+        <script src="js/config.js" defer></script>
+        <script src="js/bulletin.js" defer></script>
     </head>
     <body>
         <!-- Top UI (Hidden on Print) -->
@@ -82,16 +83,9 @@
         <!-- Bulletin Page Template -->
         <template id="bulletin-template">
             <div class="page">
-                <header class="header">
-                    <div class="logo-box"><img src="AMI.png" class="header-logo" /></div>
-                    <div class="header-center">
-                        <h3 class="header-title">Association Musulmane de l'Inde</h3>
-                        <p class="header-address">
-                            91-93 BOULEVARD PASTEUR - 93120 LA COURNEUVE<br />
-                            01.48.36.48.66 / ami93120@gmail.com
-                        </p>
-                    </div>
-                </header>
+                <div id="header-container" class="header header-standard">
+                    <!-- Header injected by common.js -->
+                </div>
 
                 <div class="separator-line"></div>
 
@@ -119,7 +113,7 @@
 
                 <h1 class="bulletin-title js-bulletin-title"></h1>
 
-                <table class="grade-table">
+                <table class="ami-table grade-table">
                     <thead>
                         <tr>
                             <th class="col-matieres" rowspan="2">MATIÈRES</th>

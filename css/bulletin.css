@@ -1,0 +1,289 @@
+/**
+ * Bulletin Styling (A4 Portrait)
+ */
+@import url("common.css");
+
+:root {
+    --page-width: 210mm;
+    --page-height: 297mm;
+}
+
+/* --- UI Controls Override --- */
+/* The .no-print in common.css is generic. Bulletin has a more complex control panel. */
+.controls {
+    /* Inherits basic no-print positioning */
+    border-bottom: 2px solid var(--brand-light);
+}
+
+.manual-dashboard {
+    background: white;
+    padding: var(--spacing-md) var(--spacing-xl);
+    border-radius: 8px;
+    border: 1px solid var(--brand-light);
+    width: 100%;
+    margin-top: 40px; /* Space from top */
+}
+
+/* ... (Keep the rest of the dashboard/form styles from style.css) ... */
+.status-bar {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--color-grey);
+}
+.dashboard-header {
+    border-left: 3px solid var(--brand);
+    padding-left: 10px;
+    margin-bottom: 10px;
+}
+.dashboard-title {
+    font-weight: 900;
+    color: var(--brand-dark);
+    margin: 0;
+    text-transform: uppercase;
+}
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+}
+.form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+}
+.form-group-row-mini {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: 0.625rem;
+    align-items: end;
+}
+.form-group {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+.form-group label {
+    font-size: 9px;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: var(--brand-dark);
+}
+.form-group input,
+.form-group select {
+    padding: 0.5rem;
+    border: 1.5px solid var(--brand-light);
+    border-radius: 8px;
+}
+.visual-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+    gap: 6px;
+}
+/* Replace radio buttons with button-like labels */
+.picker-item {
+    position: relative;
+}
+
+.picker-item input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.picker-item label {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: var(--brand-light);
+    border: 1px solid var(--brand);
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    transition: all 0.2s;
+    user-select: none;
+}
+
+.picker-item label:hover {
+    background: #e5e7eb;
+}
+
+.picker-item input:checked + label {
+    background: var(--brand);
+    color: white;
+    border-color: var(--brand-dark);
+}
+.upload-section {
+    border: 2px dashed var(--brand);
+    padding: 0.625rem;
+    text-align: center;
+    cursor: pointer;
+}
+
+/* --- A4 Page Layout --- */
+.page {
+    background: white;
+    width: var(--page-width);
+    height: var(--page-height);
+    padding: var(--spacing-2xl) var(--spacing-2xl); /* 1.25rem = ~20mm approx */
+    margin: 3.125rem auto;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+    position: relative;
+    page-break-after: always;
+}
+
+@media print {
+    .page {
+        margin: 0;
+        box-shadow: none;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+/* Header Adjustments for Bulletin */
+.header {
+    /* Bulletin header is "Standard" variant */
+    justify-content: flex-start;
+    text-align: left;
+}
+.header-address {
+    margin: 0;
+}
+.separator-line {
+    border-bottom: 1px solid var(--brand);
+    margin: 0.625rem 0;
+}
+
+/* Info Section */
+.info-section {
+    margin-bottom: 1.25rem;
+}
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    margin-bottom: 0.3125rem;
+}
+.info-label {
+    color: var(--color-grey);
+    margin-right: 0.3125rem;
+}
+.info-value {
+    font-weight: 600;
+    color: var(--brand-dark);
+}
+
+.bulletin-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--brand-dark);
+    text-transform: uppercase;
+    margin: 1.25rem 0;
+}
+
+/* Grade Table Specifics */
+/* We use ami-table as base, but override borders/colors */
+.grade-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    border: 1px solid var(--brand);
+    border-radius: 8px; /* Note: border-radius on table doesn't always work without hidden overflow */
+    overflow: hidden;
+}
+
+.grade-table th,
+.grade-table td {
+    /* Borders handled by ami-table in common.css */
+    padding: 0.5rem;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.grade-table th {
+    background-color: var(--brand-light); /* Override grey background */
+    color: var(--brand-dark);
+}
+
+.col-matieres {
+    width: 20%;
+}
+.col-appreciations {
+    width: 40%;
+}
+.cell-matiere {
+    text-align: left;
+}
+.matiere-combined {
+    font-weight: 600;
+    color: var(--brand-dark);
+    font-family: var(--font-ar), var(--font-fr);
+}
+.matiere-sub {
+    font-size: 10px;
+    text-transform: uppercase;
+    color: var(--color-grey);
+}
+
+/* Footer Table Parts */
+.footer-row td {
+    background-color: var(--brand-light);
+    font-weight: 600;
+}
+.total-cell {
+    text-align: left;
+    padding-left: 0.625rem;
+}
+
+/* Bottom Section */
+.bottom-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.25rem;
+}
+.appr-box {
+    border: 1px solid var(--brand);
+    border-radius: 8px;
+    width: 45%;
+    padding: 0.625rem;
+}
+.appr-title {
+    font-weight: 600;
+    text-decoration: underline;
+    color: var(--brand-dark);
+    margin-bottom: 0.625rem;
+    display: block;
+}
+/* --- Shared Checkbox Style MOVED TO COMMON.CSS --- */
+/* Kept empty class references or minimal adjustments if needed */
+.appr-checkbox-row {
+    /* Inherits from common.css */
+    margin-bottom: 0.3125rem;
+}
+.checkbox {
+    /* Inherits from common.css */
+    margin-right: 0.625rem; /* Slight override for Bulletin spacing */
+}
+
+.visa-box {
+    width: 40%;
+    text-align: center;
+    padding-top: 1.875rem;
+    font-weight: 600;
+    color: var(--brand-dark);
+}
+
+.legal-strip {
+    margin-top: auto;
+    border-top: 1px solid var(--brand);
+    padding-top: 0.3125rem;
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    /* Legal strip needs to be at bottom, margin-top: auto handles it */
+}

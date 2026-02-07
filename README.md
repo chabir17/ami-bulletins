@@ -1,50 +1,60 @@
-# AMI Report Card Generator 🎓
+# AMI Education - Générateur de Bulletins & Enveloppes 🎓
 
-Un générateur de bulletins scolaires web-based conçu pour l'AMI (Association Musulmane de l'Inde). Ce projet permet de transformer des données CSV brutes en bulletins élégants, professionnels et prêts pour l'impression.
+Une suite d'outils web pour la gestion scolaire de l'AMI (Association Musulmane de l'Inde). Ce projet permet de générer des bulletins scolaires et d'imprimer des enveloppes à partir de données CSV.
 
 ## ✨ Fonctionnalités
 
-- **Parsing CSV Intelligent** : Utilise PapaParse pour traiter les exports de notes.
-- **Identité Visuelle Premium** : Design doré/bronze avec une typographie soignée (Noto Sans & Amiri).
-- **Mise en Page Automatique** : Génère dynamiquement une page A4 par élève.
-- **Multi-langue** : Support complet du Français et de l'Arabe dans le même document.
-- **Calculs Automatisés** : Calcule les moyennes générales, les rangs, ainsi que les min/max de la classe.
-- **Optimisé pour l'Impression** : Masquage automatique de l'interface de contrôle lors de l'impression.
+### 📄 Bulletins Scolaires (`bulletin.html`)
+
+- **Parsing CSV Intelligent** : Import automatique ou manuel des notes via PapaParse.
+- **Design Premium** : Mise en page soignée avec typographie Noto Sans & Amiri.
+- **Calculs Automatisés** : Moyennes, rangs, min/max et appréciations.
+- **Multi-langue** : Support Français/Arabe.
+
+### ✉️ Impression d'Enveloppes (`enveloppes.html`)
+
+- **Format C6** : Mise en page spécifique (162mm x 114mm) pour l'impression directe sur enveloppes.
+- **Données Élèves** : Récupération automatique des Noms, Prénoms et Classes depuis la base de données centrale.
+- **Suivi Trimestriel** : Tableau de suivi des signatures inclus au verso/recto selon l'usage.
 
 ## 🚀 Utilisation
 
-### Chargement des données
+### 1. Génération de Bulletins
 
-L'application peut charger les données de deux manières :
+Ouvrez `bulletin.html` dans votre navigateur.
 
-1. **Via URL (Automatique)** : Ajoutez des paramètres à l'URL pour pointer vers un fichier CSV spécifique :
-   `index.html?year=2025&sem=1&class=M06`
-   _(Cherchera le fichier dans `data/2025/1/M06.csv`)_
-2. **Manuel** : Si le chargement via URL échoue (sécurité navigateur locale), un bouton d'import manuel apparaît.
+- **Via URL** : `bulletin.html?year=2025-2026&sem=1&class=M06`
+- **Manuel** : Utilisez l'interface pour charger un fichier CSV si le chargement automatique est bloqué.
 
-### Impression
+### 2. Impression d'Enveloppes
 
-Une fois les bulletins générés, utilisez simplement la fonction d'impression de votre navigateur (`Ctrl+P` ou `Cmd+P`).
+Ouvrez `enveloppes.html` dans votre navigateur.
 
-- **Destination** : Enregistrer en PDF ou choisir votre imprimante.
-- **Mise en page** : Portrait.
-- **Marges** : Aucune ou par défaut (le design inclut déjà ses propres marges A4).
+- Le fichier `data/2025-2026/Database/ÉLÈVES.csv` est chargé automatiquement.
+- Lancez l'impression (`Ctrl+P`) en choisissant le format papier **C6** ou **Personnalisé (162x114mm)**.
 
 ## 🛠 Structure du Projet
 
-- `index.html` : Structure de base et templates des bulletins.
-- `style.css` : Design system complet (Variables, Layout, Print).
-- `script.js` : Moteur de rendu et logique de parsing.
-- `config.js` : Mappages des matières et traductions.
-- `data/` : Dossier recommandé pour stocker vos fichiers CSV.
+```
+/
+├── assets/              # Images et logos
+│   └── AMI.png
+├── css/                 # Feuilles de style
+│   ├── common.css       # Styles partagés (Police, Reset, Header, Tableaux)
+│   ├── bulletin.css     # Style spécifique aux bulletins (A4)
+│   └── envelope.css     # Style spécifique aux enveloppes (C6)
+├── js/                  # Logique applicative
+│   ├── config.js        # Configuration (Matières, Proffesseurs)
+│   ├── bulletin.js      # Logique des bulletins
+│   └── envelope.js      # Logique des enveloppes
+├── data/                # Base de données CSV
+├── bulletin.html        # Page des bulletins
+└── enveloppes.html      # Page des enveloppes
+```
 
-## 📚 Technologies utilisées
+## 📚 Technologies
 
-- **HTML5 / CSS3** (Variables CSS, Flexbox)
-- **Vanilla JavaScript** (ES6+)
-- **[PapaParse](https://www.papaparse.com/)** : Pour le traitement des fichiers CSV.
-- **Google Fonts** : Noto Sans et Noto Naskh Arabic.
-
----
-
-_Ce projet a été développé pour assurer une présentation de haute qualité des résultats scolaires de l'AMI._
+- **HTML5 / CSS3**
+- **Vanilla JavaScript**
+- **PapaParse** (Traitement CSV)
+- **Google Fonts**

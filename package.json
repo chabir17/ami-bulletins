@@ -2,7 +2,7 @@
     "name": "ami-bulletins",
     "version": "1.0.0",
     "description": "",
-    "main": "config.js",
+    "main": "js/config.js",
     "scripts": {
         "start": "http-server . -c-1 -o",
         "format": "prettier --write ."

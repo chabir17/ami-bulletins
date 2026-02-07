@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Impression Enveloppes - AMI</title>
+        <!-- PapaParse CDN -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+        <link rel="stylesheet" href="css/envelope.css" />
+        <script src="js/common.js"></script>
+    </head>
+    <body>
+        <div class="controls no-print">
+            <span id="status">Chargement...</span> |
+            <button onclick="window.print()" style="padding: 5px 10px; cursor: pointer">Imprimer</button>
+        </div>
+
+        <div id="container"></div>
+
+        <template id="envelope-template">
+            <div class="envelope-page">
+                <div class="header header-envelope" id="header-container">
+                    <!-- Header injected by common.js -->
+                </div>
+                <div class="separator-line"></div>
+
+                <div class="student-info">
+                    <div class="info-row">
+                        <span class="label">NOM :</span>
+                        <span class="dots js-nom">.......................................................................................</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">PRÉNOM :</span>
+                        <span class="dots js-prenom">.......................................................................................</span>
+                    </div>
+                    <div class="info-row split">
+                        <div class="left">
+                            <span class="label">CLASSE :</span>
+                            <span class="dots js-classe">.......................</span>
+                        </div>
+                        <div class="right">
+                            <span class="label">CAT. :</span>
+                            <div class="checkbox-group" style="display: flex; align-items: center; gap: 10px">
+                                <div class="appr-checkbox-row" style="margin: 0"><span class="checkbox js-cat-a"></span> A</div>
+                                <div class="appr-checkbox-row" style="margin: 0"><span class="checkbox js-cat-b"></span> B</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <table class="ami-table tracking-table">
+                    <thead>
+                        <tr>
+                            <th class="year-col">2025/2026</th>
+                            <th>TRIMESTRE 1</th>
+                            <th>TRIMESTRE 2</th>
+                            <th>TRIMESTRE 3</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="label-col">DATE</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="label-col">NOM</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="signature-row">
+                            <td class="label-col">SIGNATURE</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </template>
+
+        <script src="js/envelope.js"></script>
+    </body>
+</html>

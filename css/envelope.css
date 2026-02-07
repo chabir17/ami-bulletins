@@ -1,0 +1,146 @@
+/**
+ * Envelope Styling (C6 Landscape)
+ */
+@import url("common.css");
+
+/* C6 format: 162mm x 114mm */
+.envelope-page {
+    width: 162mm;
+    height: 114mm;
+    background: white;
+    margin: 2.36rem;
+    padding: 1.89rem 2.84rem; /* Slightly adjusted padding for logo fit */
+    box-sizing: border-box;
+    position: relative;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 50px;
+}
+
+@media print {
+    #container {
+        padding: 0;
+        display: block;
+    }
+    .envelope-page {
+        margin: 0;
+        padding: 1.18rem;
+        box-shadow: none;
+        page-break-after: always;
+    }
+}
+
+.separator-line {
+    border-bottom: 1px solid var(--brand); /* Brand color line */
+    margin-bottom: 0.94rem;
+    width: 100%;
+}
+
+/* Student Info */
+.student-info {
+    font-size: 13px; /* approx 10pt */
+    display: flex;
+    flex-direction: column;
+    gap: 0.71rem;
+    margin-bottom: 0.47rem;
+    flex-grow: 1; /* Push table down if space allows */
+}
+
+.info-row {
+    display: flex;
+    align-items: baseline;
+}
+.label {
+    font-weight: 700;
+    min-width: 70px;
+    color: var(--brand-dark);
+} /* Brand color for labels */
+
+.dots {
+    flex-grow: 1;
+    border-bottom: 1px dotted #999;
+    padding-left: 0.3125rem;
+    white-space: nowrap;
+    overflow: hidden;
+    color: var(--color-text);
+    font-weight: 600; /* Bold student info */
+}
+
+.split {
+    justify-content: space-between;
+}
+.split .left {
+    display: flex;
+    width: 60%;
+    align-items: baseline;
+}
+.split .right {
+    display: flex;
+    width: 40%;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.checkbox-group {
+    margin-left: 0.3125rem;
+    font-size: 11px; /* approx 8pt */
+}
+
+/* Tracking Table (Inherits .ami-table from common.css) */
+.tracking-table {
+    margin-top: auto; /* Push to bottom */
+    font-size: 11px; /* Smaller font for envelopes */
+}
+
+/* Remove duplicate style defs handled by common.css .ami-table */
+.tracking-table th {
+    height: 6mm;
+}
+
+.year-col {
+    width: 18%;
+}
+.label-col {
+    font-weight: 700;
+    width: 20%;
+    text-align: left;
+    padding-left: 0.3125rem;
+    color: var(--brand-dark);
+}
+
+/* Table Row Heights */
+.tracking-table tbody tr:nth-child(1) td {
+    height: 1cm; /* DATE */
+}
+
+.tracking-table tbody tr:nth-child(2) td {
+    height: 1cm; /* NOM */
+}
+
+.signature-row td {
+    height: 2cm; /* SIGNATURE */
+    vertical-align: middle;
+}
+
+/* Print specific fixes */
+@media print {
+    .dots {
+        border-bottom: 1px dotted #000;
+    }
+    .tracking-table th {
+        background-color: #eee !important; /* Fallback */
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    .separator-line {
+        border-bottom: 1px solid #000;
+    } /* Ensure visibility */
+}

@@ -7,8 +7,11 @@
     // --- UTILS ---
     const Utils = {
         formatNum(num, dec = 2) {
-            if (num === undefined || num === null || isNaN(num)) return "-";
-            return parseFloat(num.toFixed(dec)).toString().replace(".", ",");
+            // Updated to handle 20 and 0 correctly without unneeded decimals via parseFloat
+            if (num === undefined || num === null || (typeof num === "number" && isNaN(num))) return "-";
+            const val = parseFloat(num);
+            if (isNaN(val)) return "-";
+            return parseFloat(val.toFixed(dec)).toString().replace(".", ",");
         },
 
         getURLParams() {
@@ -159,9 +162,17 @@
 
             students.forEach((student) => {
                 const pageClone = this.bulletinTemplate.content.cloneNode(true);
+
+                // Inject Header using common.js
+                const headerContainer = pageClone.getElementById("header-container");
+                if (headerContainer && typeof getAMIHeader === "function") {
+                    headerContainer.innerHTML = getAMIHeader();
+                }
+
                 const metrics = GradeEngine.calculateStudentMetrics(student, headers, stats);
 
                 // Header and Identity
+                // pageClone.querySelector(".logo-box img").src = "assets/AMI.png"; // Already in template
                 pageClone.querySelector(".js-student-name").textContent = student[1] || "";
                 pageClone.querySelector(".js-student-firstname").textContent = student[2] || "";
                 pageClone.querySelector(".js-teacher-name").textContent = teacher;
@@ -239,15 +250,19 @@
             document.getElementById("manual-ui").classList.remove("hidden");
         },
 
-        populateClassPicker() {
+        populateClassPicker(selectedClass) {
             if (!this.classPicker) return;
             this.classPicker.innerHTML = "";
+            const keys = Object.keys(CONFIG.classes);
 
-            Object.keys(CONFIG.classes).forEach((className, idx) => {
+            keys.forEach((className, idx) => {
+                // Default to first if no selection, OR check against param
+                const isSelected = selectedClass ? className === selectedClass : idx === 0;
+
                 const item = document.createElement("div");
                 item.className = "picker-item";
                 item.innerHTML = `
-                    <input type="radio" name="className" id="class-${className}" value="${className}" ${idx === 0 ? "checked" : ""} />
+                    <input type="radio" name="className" id="class-${className}" value="${className}" ${isSelected ? "checked" : ""} />
                     <label for="class-${className}">${className}</label>
                 `;
                 this.classPicker.appendChild(item);
@@ -258,7 +273,12 @@
     // --- APPLICATION OVERSEER ---
     const BulletinsApp = {
         async init() {
-            UIController.populateClassPicker();
+            // UIController.populateClassPicker();
+
+            // Ensure header is loaded
+            if (!getAMIHeader()) {
+                await preloadHeader();
+            }
 
             const dropzone = document.getElementById("dropzone");
             const fileInput = document.getElementById("manualFile");
@@ -323,9 +343,16 @@
             const params = Utils.getURLParams();
             if (!params) {
                 UIController.setStatus("Veuillez sélectionner un fichier CSV");
+                UIController.populateClassPicker(); // Default pop
                 UIController.showManualUI();
                 return;
             }
+
+            // Populate picker with current selection so user sees it
+            UIController.populateClassPicker(params.className);
+
+            // Show the UI with the controls so user can see what's happening
+            UIController.showManualUI();
 
             // Auto-fetch mode
             const yearUnderscore = params.year.replace("-", "_");
