@@ -46,88 +46,99 @@
 }
 
 /* Header Sections */
-/* Clean Modern Header */
+/* Professional Sheet Header */
 .sheet-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid var(--brand); /* Use Brand Color */
-    padding: 10px 0; /* Reduced padding */
-    margin-bottom: 15px; /* Reduced margin */
+    align-items: flex-end;
+    border-bottom: 2px solid var(--brand);
+    padding-bottom: 12px;
+    margin-bottom: 20px;
     font-family: var(--font-fr);
 }
 
 .header-info {
     display: flex;
-    gap: 30px; /* Space between groups */
-    align-items: center;
+    gap: 45px;
+    align-items: flex-end;
 }
 
 .header-group {
     display: flex;
-    flex-direction: column; /* Stack label and value */
-    gap: 2px;
+    flex-direction: column;
+    gap: 4px;
+    position: relative;
+    text-align: left; /* Keep info left aligned */
+}
+
+/* Vertical divider between groups */
+.header-group:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: -22.5px;
+    bottom: 0;
+    height: 24px;
+    width: 1px;
+    background: var(--brand);
+    opacity: 0.25;
 }
 
 .header-label {
     text-transform: uppercase;
     font-size: 10px;
-    letter-spacing: 0.5px;
-    color: var(--brand); /* Updated to Brand color */
-}
-
-.header-value {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--brand-dark); /* Updated to Brand Dark */
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-/* Minimal Badge */
-.badge-minimal {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0; /* Remove padding */
-    border-radius: 0; /* Remove radius */
-    font-size: 14px; /* Match header value size */
+    letter-spacing: 1.5px;
+    color: var(--brand);
     font-weight: 600;
     line-height: 1;
 }
 
-.badge-minimal.class {
-    background-color: transparent;
+.header-value {
+    font-size: 16px;
+    font-weight: 600;
     color: var(--brand-dark);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    line-height: 1.2;
 }
 
-.badge-minimal.group {
-    background-color: transparent;
+/* Minimal Badge Style Refined */
+.badge-minimal {
+    display: inline-flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 600;
     color: var(--brand-dark);
 }
 
 .badge-minimal.group::before {
     content: "•";
-    margin: 0 6px;
+    margin: 0 8px;
     color: var(--brand);
+    font-weight: 400;
 }
 
 .header-title-block {
-    text-align: right;
+    text-align: left; /* Align title block to the left */
+    line-height: 1;
 }
 
 .header-title-main {
-    font-size: 16px;
-    font-weight: 800;
+    font-size: 22px;
+    font-weight: 600;
     text-transform: uppercase;
     color: var(--brand);
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
 }
 
 .header-title-sub {
-    font-size: 12px;
-    color: #4b5563; /* Gray-600 */
+    font-size: 13px;
+    color: var(--text-secondary);
     font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.8;
 }
 
 /* Badges in Header */
@@ -154,7 +165,7 @@
     border-collapse: separate;
     border-spacing: 0;
     font-family: var(--font-fr);
-    font-size: 12px;
+    font-size: 15px; /* Increased from 12px, 16px might be too tight for 31 columns */
     /* Remove wrapper border to allow header separation */
     border: none;
     border-radius: 0;
@@ -165,19 +176,22 @@
 .sheet-table td {
     border-bottom: 1px solid var(--brand);
     border-right: 1px solid var(--brand);
-    padding: 6px 4px;
+    padding: 0.125rem 0.25rem;
     text-align: center;
     vertical-align: middle;
 }
 
 /* Fix Left Border for the Grid Part */
-/* All Grid Rows (excluding .print-header-row) First Cell */
-.sheet-table thead tr:not(.print-header-row) th:first-child,
+/* Only apply left border to the VERY first cell of the grid header (Row 2, effectively) */
+/* This avoids the 'Day Numbers' row in Presence (Row 3) getting a spurious left border */
+.sheet-table thead tr:nth-child(2) th:first-child {
+    border-left: 1px solid var(--brand);
+}
 .sheet-table tbody tr td:first-child {
     border-left: 1px solid var(--brand);
 }
 
-/* Remove Right Border from last child is Default behavior usually, but we want a CLOSED box */
+/* Remove Right Border from last child */
 .sheet-table th:last-child,
 .sheet-table td:last-child {
     border-right: 1px solid var(--brand);
@@ -223,6 +237,8 @@
 /* Day/Num border removal */
 .day-col-header {
     border-bottom: none !important;
+    padding: 0.125rem 0.25rem !important; /* User requested padding */
+    font-size: 11px;
 }
 /* Ensure the last row of headers (day numbers) has the bottom border */
 .sheet-table thead tr:last-child th.day-col-header {
@@ -242,9 +258,13 @@
 .sheet-table tbody td:nth-child(2),
 .sheet-table tbody td:nth-child(3) {
     text-align: left !important;
-    padding-left: 10px !important;
-    font-weight: normal;
-    min-width: 150px;
+    padding-left: 8px !important;
+    font-weight: 500;
+    width: 4cm; /* Reduced from 150px */
+    max-width: 4cm;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .col-empty {

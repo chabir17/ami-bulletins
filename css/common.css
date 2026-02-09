@@ -170,6 +170,15 @@ input:checked + .slider:before {
     box-sizing: border-box;
 }
 
+/* --- Font Utility Classes --- */
+.ar {
+    font-family: var(--font-ar) !important;
+}
+
+.fr {
+    font-family: var(--font-fr) !important;
+}
+
 /* --- Global Layout --- */
 /* Fix transitions to be smoother */
 body {
@@ -535,7 +544,7 @@ body.sidebar-collapsed .main-content {
     width: 100%;
     border-collapse: separate; /* Changed to separate for border-radius */
     border-spacing: 0;
-    font-size: 13px;
+    font-size: 16px; /* Increased from 13px */
     border: 1px solid var(--brand); /* Add outer border frame */
     border-radius: 8px;
     overflow: hidden;
@@ -544,28 +553,30 @@ body.sidebar-collapsed .main-content {
 .ami-table th,
 .ami-table td {
     border-bottom: 1px solid var(--brand);
-    border-right: none;
-    padding: 1rem;
-    text-align: left;
+    border-right: 1px solid var(--brand);
+    padding: 14px 1rem; /* Slightly more padding for 16px font */
+    text-align: center;
     vertical-align: middle;
     color: var(--text-primary);
 }
-.ami-table tbody tr:last-child td {
-    border-bottom: none;
+/* Last column removal of right border */
+.ami-table th:last-child,
+.ami-table td:last-child {
+    border-right: none;
 }
+/* Header Specifics */
 .ami-table th {
     background-color: var(--brand-light);
     font-weight: 600;
     text-transform: uppercase;
     color: var(--brand-dark);
-    font-size: 12px;
+    font-size: 14px; /* Increased from 12px */
     letter-spacing: 0.05em;
     border-bottom: 2px solid var(--brand);
-    border-top: none;
 }
-.ami-table tbody tr:hover {
-    background-color: var(--brand-light); /* Highlight on hover */
-    transition: background-color 0.2s;
+/* Last row removal of bottom border to avoid double with frame */
+.ami-table tbody tr:last-child td {
+    border-bottom: none;
 }
 
 /* --- Misc UI --- */
@@ -949,48 +960,33 @@ body.sidebar-collapsed .main-content {
         display: none !important;
     }
 
-    /* Reset Body to Pure White */
+    /* Force Color Visibility */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Reset Body to Pure White but keep brand colors functional */
     body,
     body.dark-mode,
     body.light-mode {
         background-color: white !important;
-        color: black !important;
+        color: var(--text-primary) !important;
 
-        /* Force CSS Variables Override for Dark Mode */
-        --bg-app: #ffffff !important;
+        /* Force brand colors to persist in print */
+        --brand: #c8b070 !important;
+        --brand-dark: #6e613d !important;
+        --brand-light: #f4f1e6 !important;
         --bg-surface: #ffffff !important;
-        --text-primary: #000000 !important;
-        --text-secondary: #000000 !important;
-        --text-tertiary: #555555 !important;
-        --border-color: #000000 !important;
-        --brand-light: #ffffff !important;
-        --brand-dark: #000000 !important;
     }
 
-    /* Reset specific containers that might hold dark backgrounds */
+    /* Reset specific containers only if they have background images/colors interfering */
     .app-container,
-    .main-content,
-    .ami-table,
-    .kpi-card,
-    .chart-container,
-    tr,
-    th,
-    td {
-        background-color: white !important;
-        background: white !important;
-        color: black !important;
+    .main-content {
+        background: transparent !important;
         box-shadow: none !important;
-    }
-
-    /* Ensure table headers are readable */
-    .ami-table th {
-        background-color: #f0f0f0 !important; /* Light grey for header distinction */
-        color: black !important;
-        border-bottom: 2px solid black !important;
-    }
-
-    .ami-table td {
-        border-bottom: 1px solid #ccc !important;
+        padding: 0 !important;
+        margin: 0 !important;
     }
 
     /* Hide decorative dark mode elements */
@@ -998,11 +994,5 @@ body.sidebar-collapsed .main-content {
     .sidebar,
     .mobile-nav {
         display: none !important;
-    }
-
-    /* Bulletin/Envelope Headers */
-    .header-title,
-    .header-address {
-        color: black !important;
     }
 }

@@ -101,39 +101,53 @@
     gap: 0.3125rem; /* 5px */
 }
 
-/* Enveloppe Table (Inherits .ami-table from common.css) */
+/* Enveloppe Table: Rewrite based on Bulletin robust box model */
 .enveloppe-table {
     margin-top: auto; /* Push to bottom */
+    width: 100%;
     border-collapse: separate;
     border-spacing: 0;
-    border: 1px solid var(--brand);
+    font-size: 13px;
+    border: 1px solid var(--brand); /* Outer frame */
     border-radius: 8px;
     overflow: hidden;
 }
 
+/* All Cells: Bottom and Right borders */
 .enveloppe-table td,
 .enveloppe-table th {
     border-bottom: 1px solid var(--brand); /* Brand color borders */
     border-right: 1px solid var(--brand);
     padding: 0.5rem;
-    text-align: center; /* Center align text */
-    font-size: 13px; /* Set font size to 13px */
+    text-align: center;
+    vertical-align: middle;
+    /* Reset inherited borders */
+    border-top: none;
+    border-left: none;
 }
-.enveloppe-table th:last-child,
-.enveloppe-table td:last-child {
-    border-right: none;
+
+/* Ensure explicit border removal for very last cell in a row to avoid double border with container */
+.enveloppe-table tbody tr td:last-child,
+.enveloppe-table thead tr th:last-child {
+    border-right: none !important;
 }
+/* Ensure the row just above the Signature block (Row 2, Names) has a border so it doesn't merge with Signature */
+.enveloppe-table tbody tr:nth-last-child(2) td {
+    border-bottom: 1px solid var(--brand);
+}
+/* Force no border on the absolute last row (Signature) */
 .enveloppe-table tbody tr:last-child td {
     border-bottom: none;
 }
 
-/* Remove duplicate style defs handled by common.css .ami-table */
+/* Header Specifics */
 .enveloppe-table th {
     height: 6mm;
     background-color: var(--brand-light); /* Ensure header bg */
-    vertical-align: middle;
     color: var(--brand-dark); /* Ensure brand dark text */
-    border-bottom: 2px solid var(--brand); /* Thicker bottom border */
+    font-weight: 600;
+    /* Thicker bottom border for header separation */
+    border-bottom: 2px solid var(--brand);
 }
 
 .year-col {

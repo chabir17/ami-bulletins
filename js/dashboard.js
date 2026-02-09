@@ -211,20 +211,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const tr = document.createElement("tr");
             tr.innerHTML = `
-                <td style="text-align:left;">
+                <td>
                     <span class="class-badge ${badgeClass}">${cls}</span>
                 </td>
                 <td style="text-align:left;">${teacher}</td>
-                <td style="font-weight:bold;">${data.Total}</td>
+                <td style="font-weight:600;">${data.Total}</td>
                 <td>
-                    <span style="color:${COLORS.green}; font-weight:700;">${data.Adh}</span> 
+                    <span style="color:${COLORS.green}; font-weight:600;">${data.Adh}</span> 
                     <span style="color:${COLORS.brand}; margin: 0 4px;">&bull;</span> 
-                    <span style="color:${COLORS.orange}; font-weight:700;">${data.NonAdh}</span>
+                    <span style="color:${COLORS.orange}; font-weight:600;">${data.NonAdh}</span>
                 </td>
                 <td>
-                    <span style="color:${COLORS.blue}; font-weight:700;">${data.M}</span> 
+                    <span style="color:${COLORS.blue}; font-weight:600;">${data.M}</span> 
                     <span style="color:${COLORS.brand}; margin: 0 4px;">&bull;</span> 
-                    <span style="color:${COLORS.pink}; font-weight:700;">${data.F}</span>
+                    <span style="color:${COLORS.pink}; font-weight:600;">${data.F}</span>
                 </td>
             `;
             tbody.appendChild(tr);

@@ -242,7 +242,8 @@
                         disciplineOccurred = true;
                     }
 
-                    rowClone.querySelector(".js-row-matiere-ar-trans").textContent = `${subject.ar} ${subject.trans ? `- ${subject.trans}` : ""}`;
+                    rowClone.querySelector(".js-row-matiere-ar").textContent = subject.ar;
+                    rowClone.querySelector(".js-row-matiere-trans").textContent = subject.trans ? ` - ${subject.trans}` : "";
                     rowClone.querySelector(".js-row-matiere-fr").textContent = subject.fr || "Non Défini";
                     rowClone.querySelector(".js-row-note").innerHTML = scoreDisplay;
                     rowClone.querySelector(".js-row-avg").textContent = Utils.formatNum(stat.avg);

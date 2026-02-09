@@ -25,11 +25,22 @@
 }
 
 @media print {
+    @page {
+        size: A4 portrait;
+        margin: 0;
+    }
+    body {
+        background: white !important;
+    }
     .page {
         margin: 0;
+        border: none;
         box-shadow: none;
-        width: 100%;
-        height: 100%;
+        width: var(--page-width);
+        height: var(--page-height);
+        overflow: hidden;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
 }
 
@@ -76,41 +87,119 @@
 }
 
 /* Grade Table Specifics */
-/* We use ami-table as base, but override borders/colors */
 /* Grade Table Specifics */
-/* We use ami-table as base, but override borders/colors */
+/* Use wrapper for outer border and radius */
 .grade-table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
     font-size: 13px;
-    border: 1px solid var(--brand); /* Outer border */
-    border-radius: 8px; /* Note: border-radius on table doesn't always work without hidden overflow */
+    border: 1px solid var(--brand);
+    border-radius: 8px;
     overflow: hidden;
 }
 
+/* All Cells: Bottom and Right borders */
 .grade-table th,
 .grade-table td {
-    /* Borders handled by ami-table in common.css */
     border-bottom: 1px solid var(--brand);
     border-right: 1px solid var(--brand);
     padding: 0.5rem;
     vertical-align: middle;
     text-align: center;
-}
-.grade-table th:last-child,
-.grade-table td:last-child {
-    border-right: none;
-}
-.grade-table tbody tr:last-child td {
-    border-bottom: none;
+    border-top: none;
+    border-left: none;
 }
 
-.grade-table th {
-    background-color: var(--brand-light); /* Override grey background */
+/* Last Column: No Right Border - General Rule */
+.grade-table th:last-child,
+.grade-table td:last-child {
+    border-right: none !important;
+}
+
+/* Header Specific Override for "Short" Rows (like Row 2 containing Max) */
+/* The last th in the 2nd row is "MAX", which sits to the left of "APPRECIATIONS" (from Row 1) */
+/* So it MUST have a right border. */
+.grade-table thead tr:not(:first-child) th:last-child {
+    border-right: 1px solid var(--brand) !important;
+}
+
+/* Last Row: No Bottom Border */
+.grade-table tbody tr:last-child td {
+    border-bottom: none !important;
+}
+
+/* Header Specifics */
+.grade-table thead th {
+    background-color: var(--brand-light);
     color: var(--brand-dark);
     font-weight: 600;
-    border-bottom: 2px solid var(--brand); /* Thicker bottom border for headers */
+    border-bottom: 2px solid var(--brand);
+}
+
+/* 
+   Specific header border adjustments:
+   1. The middle columns (ÉLÈVE, CLASSE) have a sub-header row.
+      The border between the top row (ÉLÈVE/CLASSE) and the second row (1ER SEM/MOY/etc) must be 1px.
+   2. "MATIÈRES" and "APPRÉCIATIONS GÉNÉRALES" span both rows, 
+      so their bottom border IS the main header bottom border (already 2px from general rule above).
+*/
+.grade-table thead tr:first-child th {
+    /* Set 1px for internal header division */
+    border-bottom: 1px solid var(--brand);
+}
+/* Restore 2px for cells that span the whole header height or are the final boundary */
+.grade-table thead th[rowspan="2"] {
+    border-bottom: 2px solid var(--brand);
+}
+
+/* Footer Row Specifics (Moyenne, Rang) */
+.footer-row td {
+    background-color: var(--brand-light);
+    font-weight: 600;
+    color: var(--brand-dark);
+}
+
+/* 
+   Border-top 2px for the MOYENNE GÉNÉRALE line to separate from subjects 
+   This targets the first row of the footer.
+*/
+.grade-table tfoot tr:first-child td {
+    border-top: 2px solid var(--brand) !important;
+}
+
+/* Re-enforce right borders for footer cells, EXCEPT the last one */
+.footer-row td,
+.grade-table tfoot tr td,
+.grade-table tbody tr:last-child td {
+    border-right: 1px solid var(--brand) !important;
+}
+.grade-table tbody tr:last-child td:last-child,
+.grade-table tfoot tr td:last-child {
+    border-right: none !important;
+}
+
+/* Col styles */
+/* Highlight Student Grade Header */
+/* The header for student grades is '1ER SEM.' which is the 1st th of the 2nd row */
+.grade-table thead tr:nth-child(2) th:first-child {
+    background-color: var(--brand-light); /* Highlight */
+    color: var(--brand-dark);
+    border-right: 1px solid var(--brand) !important;
+}
+
+/* Highlight Student Grades (Column 2) */
+.grade-table tbody td:nth-child(2) {
+    font-weight: 600;
+    font-size: 15px;
+    background-color: var(--brand-light);
+    color: var(--brand-dark);
+}
+/* Adjust footer highlight */
+.footer-row td:nth-child(2) {
+    font-weight: 600;
+    font-size: 17px;
+    background-color: var(--brand-light);
 }
 
 .col-matieres {
@@ -120,29 +209,31 @@
     width: 40%;
 }
 .cell-matiere {
-    text-align: left;
+    text-align: left !important;
 }
 .matiere-combined {
     font-weight: 600;
     color: var(--brand-dark);
-    font-family: var(--font-ar), var(--font-fr), serif; /* Prioritize shared fonts */
+    font-family: var(--font-ar), var(--font-fr), serif;
 }
 .matiere-sub {
     font-size: 10px;
     text-transform: uppercase;
     color: var(--color-grey);
 }
-
-/* Footer Table Parts */
-.footer-row td {
-    background-color: var(--brand-light);
-    font-weight: 600;
-}
 .total-cell {
     text-align: left;
     padding-left: 0.625rem;
 }
 
+/* Ensure the row just above the last (often 'rank') has a border so it doesn't merge with the last row */
+.grade-table tbody tr:not(:last-child) td {
+    border-bottom: 1px solid var(--brand);
+}
+/* Specifically for the last but one row */
+.grade-table tbody tr:nth-last-child(2) td {
+    border-bottom: 1px solid var(--brand);
+}
 /* Bottom Section */
 .bottom-section {
     display: flex;

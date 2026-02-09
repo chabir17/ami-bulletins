@@ -150,8 +150,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 // Header Info
                 const teacher = typeof CONFIG !== "undefined" && CONFIG.classes[cls] ? CONFIG.classes[cls].teacher : "Professeur";
+                const group = typeof CONFIG !== "undefined" && CONFIG.classes[cls] ? CONFIG.classes[cls].group : "GRP";
                 clone.querySelector(".js-teacher").textContent = teacher;
-                clone.querySelector(".js-class").textContent = cls;
+                clone.querySelector(".js-class").innerHTML = `${cls} <span style="color:var(--brand)">&nbsp;&bull;&nbsp;</span> ${group}`;
                 clone.querySelector(".js-sem").textContent = "Semestre " + State.cSem;
                 clone.querySelector(".js-year").textContent = State.year.replace("-", "/");
 

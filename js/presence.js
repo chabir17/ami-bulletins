@@ -174,7 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
             targetClasses = [State.currentClass];
         }
 
-        const STUDENTS_PER_PAGE = 28;
+        const STUDENTS_PER_PAGE = 24;
         const calYear = getCalendarYear(State.year, State.month);
         const allDays = getDaysInMonth(State.month, calYear);
 
@@ -191,11 +191,36 @@ document.addEventListener("DOMContentLoaded", () => {
                 const clone = tpl.content.cloneNode(true);
 
                 const teacher = typeof CONFIG !== "undefined" && CONFIG.classes[cls] ? CONFIG.classes[cls].teacher : "Professeur";
+                const group = typeof CONFIG !== "undefined" && CONFIG.classes[cls] ? CONFIG.classes[cls].group : "GRP";
                 clone.querySelector(".js-teacher").textContent = teacher;
-                clone.querySelector(".js-class").textContent = cls;
+                clone.querySelector(".js-class").innerHTML = `${cls} <span style="color:var(--brand)">&nbsp;&bull;&nbsp;</span> ${group}`;
 
                 const monthName = getMonthName(State.month);
                 clone.querySelector(".js-month-display").textContent = `${monthName} ${calYear}`;
+
+                const HIJRI_MAPPING = {
+                    8: { ar: "ربيع الأول / ربيع الثاني", year: 1447 }, // Sep
+                    9: { ar: "ربيع الثاني / جمادى الأولى", year: 1447 }, // Oct
+                    10: { ar: "جمادى الأولى / جمادى الآخرة", year: 1447 }, // Nov
+                    11: { ar: "جمادى الآخرة / رجب", year: 1447 }, // Dec
+                    0: { ar: "رجب / شعبان", year: 1447 }, // Jan
+                    1: { ar: "شعبان / رمضان", year: 1447 }, // Feb
+                    2: { ar: "رمضان / شوال", year: 1447 }, // Mar
+                    3: { ar: "شوال / ذو القعدة", year: 1447 }, // Apr
+                    4: { ar: "ذو القعدة / ذو الحجة", year: 1447 }, // May
+                    5: { display: "ذو الحجة 1447 / محرم 1448" }, // Jun (Year transition often in June)
+                };
+
+                const hijri = HIJRI_MAPPING[State.month];
+                if (hijri) {
+                    let text = ``;
+                    if (hijri.display) {
+                        text = hijri.display;
+                    } else {
+                        text = `${hijri.ar} ${hijri.year}`;
+                    }
+                    clone.querySelector(".js-hijri-display").innerHTML = `<span style="color:var(--brand)">&nbsp;&bull;&nbsp;</span> ${text}`;
+                }
 
                 // HEADER BUILD
                 const allowedDays = getClassRules(cls);
