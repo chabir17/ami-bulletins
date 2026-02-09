@@ -28,6 +28,12 @@
 
     // --- DATA SERVICE ---
     const DataService = {
+        /**
+         * Fetches and parses a CSV file from a URL/Path.
+         * @param {string} path - URL/Path to CSV
+         * @param {Function} onComplete - Callback with parsed data
+         * @param {Function} onError - Callback on failure
+         */
         fetchCSV(path, onComplete, onError) {
             Papa.parse(path, {
                 download: true,
@@ -57,6 +63,12 @@
 
     // --- GRADE ENGINE ---
     const GradeEngine = {
+        /**
+         * Processes raw CSV rows into a structured object.
+         * Expects Row 0 as headers, Row 1 as max scores (baremes), Row 2+ as students.
+         * @param {Array[]} rawData - Array of arrays from CSV
+         * @returns {Object|null} { headers, students, stats } or null if invalid
+         */
         processRaw(rawData) {
             if (rawData.length < 3) return null;
 
@@ -88,6 +100,11 @@
             return { headers, students, stats };
         },
 
+        /**
+         * Calculates metrics (Avg, Rank, Mention) for a single student row.
+         * Looks for specific columns like "MOYENNE", "RANG", "MENTION".
+         * If Mean is missing, it calculates a weighted average based on available notes.
+         */
         calculateStudentMetrics(student, headers, stats) {
             const totalMax = Object.values(stats).reduce((acc, s) => acc + s.bareme, 0);
 
@@ -143,6 +160,11 @@
         rowTemplate: document.getElementById("row-template"),
         classPicker: document.getElementById("class-picker"),
 
+        /**
+         * Renders the bulletins (DOM injection).
+         * @param {Object} data - Processed data { headers, students, stats }
+         * @param {Object} params - Context params { year, sem, className }
+         */
         render(data, params) {
             this.container.innerHTML = "";
             const { headers, students, stats } = data;

@@ -105,6 +105,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // === DATA PROCESSING ===
+    /**
+     * Processes raw CSV data into KPIs and Class Stats.
+     * @param {Array} data - Raw CSV data objects
+     */
     function processData(data) {
         // Updated filter
         State.data = data.filter((student) => student["Nom"]); // Minimal validation
@@ -227,6 +231,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
+    /**
+     * Renders the charts using Chart.js.
+     * 1. Stacked Bar Chart for Classes (Boys vs Girls)
+     * 2. Doughnut Chart for Global Gender Distribution
+     */
     function renderCharts() {
         const stats = State.kpis.classStats;
         const labels = Object.keys(stats).sort();

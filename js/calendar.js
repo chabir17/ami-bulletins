@@ -3,31 +3,26 @@
  */
 (function () {
     const CalendarApp = {
-        config: {
-            yearStart: 2025,
-            yearEnd: 2026,
-            months: [8, 9, 10, 11, 0, 1, 2, 3, 4, 5], // Sep -> Jun (0=Jan)
-            monthNames: ["JANVIER", "FÉVRIER", "MARS", "AVRIL", "MAI", "JUIN", "JUILLET", "AOÛT", "SEPTEMBRE", "OCTOBRE", "NOVEMBRE", "DÉCEMBRE"],
-            days: ["L", "M", "M", "J", "V", "S", "D"],
-            events: [
-                { start: "2025-09-06", end: "2025-09-06", desc: "Rentrée scolaire 2025/2026", type: "holiday" },
-                { start: "2025-12-27", end: "2026-01-04", desc: "Vacances de fin d'année 2025", type: "holiday" },
-                { start: "2026-01-17", end: "2026-01-25", desc: "Examens 1er semestre", type: "exam" },
-                { start: "2026-02-07", end: "2026-02-07", desc: "Remise des bulletins du 1er semestre", type: "special" },
-                { start: "2026-03-09", end: "2026-03-20", desc: "Vacances Ramadan & Aïd-ul-Fitr", type: "holiday" },
-                { start: "2026-05-25", end: "2026-05-28", desc: "Vacances Aïd-ul-Adha", type: "holiday" },
-                { start: "2026-06-06", end: "2026-06-14", desc: "Examens 2nd semestre", type: "exam" },
-                { start: "2026-06-27", end: "2026-06-27", desc: "Remise des bulletins du 2nd semestre", type: "special" },
-            ],
-        },
+        config: CONFIG.calendar,
 
         init() {
             this.container = document.getElementById("calendar-grid");
             this.agendaContainer = document.getElementById("agenda-body");
+
+            // Set Dynamic Title
+            const title = document.getElementById("calendar-title");
+            if (title) {
+                title.textContent = `CALENDRIER SCOLAIRE ${this.config.yearStart}/${this.config.yearEnd}`;
+            }
+
             this.renderCalendar();
             this.renderAgenda();
         },
 
+        /**
+         * Renders the main calendar grid.
+         * Splits months into two columns (Sem 1 and Sem 2).
+         */
         renderCalendar() {
             if (!this.container) return;
             this.container.innerHTML = "";
@@ -58,6 +53,12 @@
             });
         },
 
+        /**
+         * Creates the DOM structure for a single month.
+         * Generates the days grid, handles overflow days, and applies event highlighting.
+         * @param {number} year
+         * @param {number} monthIndex (0-11)
+         */
         createMonthBlock(year, monthIndex) {
             const block = document.createElement("div");
             block.className = "month-block";
@@ -291,7 +292,10 @@
             const d1 = new Date(start);
             const s1 = d1.toLocaleDateString("fr-FR", dateParams);
 
-            if (start === end) return `sam. ${s1}`; // Mock logic for day name
+            if (start === end) {
+                const dayName = d1.toLocaleDateString("fr-FR", { weekday: "short" });
+                return `${dayName} ${s1}`;
+            }
 
             const d2 = new Date(end);
             const s2 = d2.toLocaleDateString("fr-FR", dateParams);

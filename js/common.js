@@ -7,6 +7,10 @@ const App = {
     headerCache: "",
     sidebarCache: "",
 
+    /**
+     * Preloads the header HTML content from header.html.
+     * Caches it in `this.headerCache` for repeated use.
+     */
     async preloadHeader() {
         try {
             const response = await fetch("header.html");
@@ -17,6 +21,10 @@ const App = {
         }
     },
 
+    /**
+     * Loads the sidebar HTML into the #sidebar-container element.
+     * Also triggers active link highlighting.
+     */
     async loadSidebar() {
         try {
             const container = document.getElementById("sidebar-container");
@@ -31,6 +39,10 @@ const App = {
         }
     },
 
+    /**
+     * Highlights the sidebar navigation item corresponding to the current page.
+     * Matches against `data-page` attribute or `href`.
+     */
     highlightActiveLink() {
         // Simple logic: check if pathname contains the href
         const path = window.location.pathname;
@@ -100,6 +112,10 @@ const App = {
         });
     },
 
+    /**
+     * Initializes the Dark/Light mode theme switcher.
+     * Persists preference to localStorage and listens for changes.
+     */
     initThemeSwitch() {
         // Toggle Element injected via sidebar.html
         const toggle = document.getElementById("checkbox-theme");
@@ -164,6 +180,11 @@ const App = {
     SelectionManager: {
         configCache: "",
 
+        /**
+         * Loads the configuration HTML (dropdowns, pickers) into a container.
+         * @param {string} containerId - The ID of the container element.
+         * @param {Object} options - Options { hideSem: boolean, onFileLoad: func, onConfigChange: func }
+         */
         async loadConfig(containerId, options = {}) {
             const container = document.getElementById(containerId);
             if (!container) return;

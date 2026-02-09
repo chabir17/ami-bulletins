@@ -67,4 +67,25 @@ const CONFIG = {
 
     // Default max score if missing from CSV Line 2
     defaultMaxScore: 20,
+
+    /**
+     * Calendar Configuration
+     */
+    calendar: {
+        yearStart: 2025,
+        yearEnd: 2026,
+        months: [8, 9, 10, 11, 0, 1, 2, 3, 4, 5], // Sep -> Jun (0=Jan)
+        monthNames: ["JANVIER", "FÉVRIER", "MARS", "AVRIL", "MAI", "JUIN", "JUILLET", "AOÛT", "SEPTEMBRE", "OCTOBRE", "NOVEMBRE", "DÉCEMBRE"],
+        days: ["L", "M", "M", "J", "V", "S", "D"],
+        events: [
+            { start: "2025-09-06", end: "2025-09-06", desc: "Rentrée scolaire 2025/2026", type: "special" },
+            { start: "2025-12-27", end: "2026-01-04", desc: "Vacances de fin d'année 2025", type: "holiday" },
+            { start: "2026-01-17", end: "2026-01-25", desc: "Examens 1er semestre", type: "exam" },
+            { start: "2026-02-07", end: "2026-02-07", desc: "Remise des bulletins du 1er semestre", type: "special" },
+            { start: "2026-03-09", end: "2026-03-20", desc: "Vacances Ramadan & Aïd-ul-Fitr", type: "holiday" },
+            { start: "2026-05-25", end: "2026-05-28", desc: "Vacances Aïd-ul-Adha", type: "holiday" },
+            { start: "2026-06-06", end: "2026-06-14", desc: "Examens 2nd semestre", type: "exam" },
+            { start: "2026-06-27", end: "2026-06-27", desc: "Remise des bulletins du 2nd semestre", type: "special" },
+        ],
+    },
 };
