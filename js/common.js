@@ -13,7 +13,7 @@ const App = {
      */
     async preloadHeader() {
         try {
-            const response = await fetch("header.html");
+            const response = await fetch("js/header.html");
             this.headerCache = await response.text();
         } catch (e) {
             console.error("Could not load header.html", e);
@@ -30,7 +30,7 @@ const App = {
             const container = document.getElementById("sidebar-container");
             if (!container) return; // Silent fail if page has no sidebar container
 
-            const response = await fetch("sidebar.html");
+            const response = await fetch("js/sidebar.html");
             const html = await response.text();
             container.innerHTML = html;
             this.highlightActiveLink();
@@ -192,7 +192,7 @@ const App = {
             // Load HTML
             if (!this.configCache) {
                 try {
-                    const res = await fetch("config-dashboard.html");
+                    const res = await fetch("js/config-dashboard.html");
                     this.configCache = await res.text();
                 } catch (e) {
                     console.error("Config load failed", e);

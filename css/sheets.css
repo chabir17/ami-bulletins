@@ -238,3 +238,16 @@
 .day-num {
     display: block;
 }
+
+/* Printing: Repeat headers */
+.print-header-row td {
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    height: auto !important;
+}
+.print-header-row .sheet-header {
+    margin-bottom: 1rem;
+    width: 100%;
+    /* Keep existing borders/padding */
+}

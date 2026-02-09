@@ -86,32 +86,35 @@
         <!-- Template for Presence Sheet -->
         <template id="sheet-template">
             <div class="sheet-page">
-                <div class="sheet-header">
-                    <div class="header-info">
-                        <div class="header-group">
-                            <span class="header-label">Professeur</span>
-                            <span class="header-value js-teacher"></span>
-                        </div>
-                        <div class="header-group">
-                            <span class="header-label">Classe / Groupe</span>
-                            <span class="header-value">
-                                <span class="badge-minimal class js-class"></span>
-                                <span class="badge-minimal group">GRP1</span>
-                            </span>
-                        </div>
-                        <div class="header-group">
-                            <span class="header-label">Mois / Année</span>
-                            <span class="header-value js-month-display"></span>
-                        </div>
-                    </div>
-                    <div class="header-title-block">
-                        <div class="header-title-main">FEUILLE DE PRÉSENCE</div>
-                        <div class="header-title-sub">SUIVI MENSUEL</div>
-                    </div>
-                </div>
-
                 <table class="sheet-table">
                     <thead>
+                        <tr class="print-header-row">
+                            <td colspan="40">
+                                <div class="sheet-header">
+                                    <div class="header-info">
+                                        <div class="header-group">
+                                            <span class="header-label">Professeur</span>
+                                            <span class="header-value js-teacher"></span>
+                                        </div>
+                                        <div class="header-group">
+                                            <span class="header-label">Classe / Groupe</span>
+                                            <span class="header-value">
+                                                <span class="badge-minimal class js-class"></span>
+                                                <span class="badge-minimal group">GRP1</span>
+                                            </span>
+                                        </div>
+                                        <div class="header-group">
+                                            <span class="header-label">Mois / Année</span>
+                                            <span class="header-value js-month-display"></span>
+                                        </div>
+                                    </div>
+                                    <div class="header-title-block">
+                                        <div class="header-title-main">FEUILLE DE PRÉSENCE</div>
+                                        <div class="header-title-sub">SUIVI MENSUEL</div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
                         <tr class="js-header-row">
                             <th class="col-num" rowspan="2">#</th>
                             <th class="col-name" rowspan="2">NOM</th>
